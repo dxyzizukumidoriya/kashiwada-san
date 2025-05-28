@@ -6,6 +6,18 @@ handler.before = async (m, { conn }) => {
             JSON.parse(m.msg.nativeFlowResponseMessage.paramsJson).id,
             m,
         );
+    } else if (m.mtype === "buttonsResponseMessage" && m.quoted.fromMe) {
+        conn.appendTextMessage(
+            m,
+            m.msg.selectedButtonId,
+            m,
+        );
+    } else if (m.mtype === "templateButtonReplyMessage" && m.quoted.fromMe) {
+        conn.appendTextMessage(
+            m,
+            m.msg.selectedId,
+            m,
+        );
     }
 }
 
