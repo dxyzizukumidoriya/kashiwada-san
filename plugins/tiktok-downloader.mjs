@@ -119,7 +119,7 @@ export default {
                     } = await axios.get(ttwm.play, {
                         responseType: 'arraybuffer'
                     });
-                    conn.sendFile(m.cht, Buffer.from(res), null, caption, m);
+                    conn.sendFile(m.chat, Buffer.from(res), null, caption, m);
                 }
             } catch (e) {
                 m.reply('❌ Maaf Error Mungkin Kebanyakan Request kali');
