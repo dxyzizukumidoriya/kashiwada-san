@@ -1,5 +1,5 @@
 {
-  "name": "Rin Bas e",
+  "name": "Rin Base",
   "version": "V1.0.0",
   "description": "Lightweight Bot Multidevice",
   "depecrated": false,
@@ -16,14 +16,14 @@
     "tixo-md",
     "baileys-md"
   ],
-  "homepage": "https://github.com/Tiooxy/Tixo-md",
-  "author": "Tio",
+  "homepage": "https://github.com/dxyzizukumidoriya/rin-base-v2",
+  "author": "Dxyz",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Tiooxy/Tixo-md.git"
+    "url": "git+https://github.com/dxyzizukumidoriya/rin-base-v2.git"
   },
   "bugs": {
-    "url": "https://github.com/Tiooxy/Tixo-md/issues"
+    "url": "https://github.com/dxyzizukumidoriya/rin-base-v2/issues"
   },
   "license": "GPL-3.0-or-later",
   "dependencies": {
