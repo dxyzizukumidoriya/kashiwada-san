@@ -3,7 +3,7 @@
   <img src="https://files.catbox.moe/hubkvg.jpg" width="250"/>
 </p>
 
-<h1 align="center">Rin Okumura - WhatsApp Bot X Telegram Bot</h1>
+<h1 align="center">Rin Okumura - WhatsApp Bot</h1>
 
 
 ---
