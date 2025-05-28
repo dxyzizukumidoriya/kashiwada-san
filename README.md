@@ -283,10 +283,10 @@ export default handler;
 
 
 ## 👥 All Contributors
-[![LeooxzyDekuu](https://github.com/LeooxzyDekuu.png?size=100)](https://github.com/LeooxzyDekuu) | [![AxellNetwork](https://github.com/AxellNetwork.png?size=100)](https://github.com/AxellNetwork) | [![AndhikaGG](https://github.com/AndhikaGG.png?size=100)](https://github.com/AndhikaGG)  
+[![Tiooxy](https://github.com/Tiooxy.png?size=100)](https://github.com/LeooxzyDekuu) | [![AxellNetwork](https://github.com/AxellNetwork.png?size=100)](https://github.com/AxellNetwork) | [![AndhikaGG](https://github.com/AndhikaGG.png?size=100)](https://github.com/AndhikaGG)  
 ---|---|---  
-[LeooxzyDekuu](https://github.com/LeooxzyDekuu) | [AxellNetwork](https://github.com/AxellNetwork) | [AndhikaGG](https://github.com/AndhikaGG)  
-Remake Base | Base Script | Penyumbang fitur
+[Tiooxy](https://github.com/Tiooxy) | [AxellNetwork](https://github.com/AxellNetwork) | [AndhikaGG](https://github.com/AndhikaGG)  
+Base Original | Base Script | Penyumbang fitur
 
 ---
 
