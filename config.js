@@ -14,7 +14,7 @@ global.setting = {
 }
 
 global.config = {
-    owner: ["6282172589188"],
+    owner: ["6283136099660"],
     name: "Rin-Kun",
     ownername: 'Dxyz',
     menu: { thumbnailUrl: 'https://files.catbox.moe/8h6ylu.jpg' }, //thumbnail: fs.readFileSync('./image/tambahkan-ft-trus-kasih-nama')
@@ -80,6 +80,11 @@ global.rpg = {
     if (!results.length) return '';
     else return emot[results[0]];
   }
+}
+
+global.msg = {
+ eror: '🤖 *Information Bot*\n\> Mohon maaf atas ketidaknyamanan dalam menggunakan *Nightmare Bot* . Ada kesalahan dalam sistem saat menjalankan perintah.',
+ danied: 'Kamu tidak memiliki akses'
 }
 
 /**
