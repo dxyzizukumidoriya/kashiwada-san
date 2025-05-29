@@ -1,5 +1,5 @@
 // 🔥® Rin-Okumura™ 🔥
-// 👿 Creator: undefined
+// 👿 Creator: dxyz
 // ⚡ Plugin: menu.js
 
 let rin = {
