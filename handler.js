@@ -5,6 +5,7 @@ const {
 } = require('./lib/color')
 const moment = require("moment-timezone")
 const fetch = require("node-fetch")
+const cron = require("node-cron");
 
 const isNumber = x => typeof x === 'number' && !isNaN(x)
 const delay = ms => isNumber(ms) && new Promise(resolve => setTimeout(resolve, ms))
@@ -53,6 +54,7 @@ module.exports = {
                         if (!('delete' in chat)) chat.delete = true
                         if (!('antiVirtex' in chat)) chat.antiVirtex = false
                         if (!('antiLink' in chat)) chat.antiLink = false
+                        if (!('mute' in chat)) chat.mute = false
                         if (!('badword' in chat)) chat.badword = false
                         if (!('antiSpam' in chat)) chat.antiSpam = false
                         if (!('freply' in chat)) chat.freply = false
@@ -73,6 +75,7 @@ module.exports = {
                         sDemote: '@user telah di demote',
                         delete: true,
                         antiLink: false,
+                        mute: false,
                         stiker: false,
                         antiSticker: false,
                         antiSpam: false,
@@ -86,6 +89,7 @@ module.exports = {
                     if (typeof settings !== 'object') global.db.data.settings[this.user.jid] = {}
                     if (settings) {
                         if (!('self' in settings)) settings.self = false
+                        if (!('resetlimit' in settings)) settings.resetlimit = false
                         if (!('autoread' in settings)) settings.autoread = false
                         if (!('restrict' in settings)) settings.restrict = true
                         if (!('autorestart' in settings)) settings.autorestart = true
@@ -98,6 +102,7 @@ module.exports = {
                     } else global.db.data.settings[this.user.jid] = {
                         self: false,
                         autoread: false,
+                        resetlimit: 0,
                         restrict: true,
                         autorestart: true,
                         restartDB: 0,
@@ -117,14 +122,25 @@ module.exports = {
                 if (opts['swonly'] && m.chat !== 'status@broadcast') return
                 if (typeof m.text !== 'string') m.text = ''
 
-                const isROwner = [conn.decodeJid(global.conn.user.id), ...config.owner.map((a) => a + "@s.whatsapp.net") ].includes(m.sender);
+                const isROwner = [conn.decodeJid(global.conn.user.id), ...config.owner.map((a) => a + "@s.whatsapp.net")].includes(m.sender);
                 const isOwner = isROwner || m.fromMe
                 const isPrems = global.db.data.users[m.sender].premium
                 const isBans = global.db.data.users[m.sender].banned
                 if (!isOwner && db.data.settings[this.user.jid].self) return;
-                    
+                if (!isOwner && db.data.chats[m.chat].mute) return
+
+                cron.schedule("* * * * *", () => {
+                    let user = Object.keys(db.data.users);
+                    let time = moment.tz(config.tz).format("HH:mm");
+                    if (db.data.settings[this.user.jid].resetlimit == time) {
+                        for (let i of user) {
+                            db.data.users[i].limit = 100;
+                        }
+                    }
+                });
+
                 if (isROwner) {
-                  db.data.users[m.sender].limit = 100
+                    db.data.users[m.sender].limit = 100
                 }
                 if (opts['queque'] && m.text && !(isMods || isPrems)) {
                     let queque = this.msgqueque,
