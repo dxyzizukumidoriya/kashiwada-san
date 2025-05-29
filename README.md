@@ -144,6 +144,28 @@ global.adReply = {
             }
         }
 
+global.thumbnail = async (title, body, thumb = {}, url, larger = false, saluran = {}) => {
+        return {
+           contextInfo: {
+               forwardingScore: 1,
+               isForwarded: true,
+           forwardedNewsletterMessageInfo: {
+               newsletterJid: saluran.jid || '',
+               serverMessageId: 103,
+               newsletterName: saluran.name || ''
+           },
+           externalAdReply: {
+               title: title,
+               body: body,
+               mediaType: 1,
+               ...thumb,
+               sourceUrl: url,
+               renderLargerThumbnail: larger
+           }
+      }
+   }
+}
+
 ```
 
 ## ⚙️ Install
