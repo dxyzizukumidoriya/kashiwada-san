@@ -41,7 +41,7 @@ ${Object.keys(src)
             try {
                 let file = pg.directory + "/" + input;
                 fs.writeFileSync(file.trim(), `// 🔥® Rin-Okumura™ 🔥
-// 👿 Creator: ${config.ownername2}
+// 👿 Creator: ${config.ownername}
 // ⚡ Plugin: ${input}
 
 ${beautify(m.quoted.text)}`);
