@@ -5,7 +5,7 @@ const {
 } = require('./lib/color')
 const moment = require("moment-timezone")
 const fetch = require("node-fetch")
-const cron = require("node-cron");
+;
 
 const isNumber = x => typeof x === 'number' && !isNaN(x)
 const delay = ms => isNumber(ms) && new Promise(resolve => setTimeout(resolve, ms))
@@ -89,7 +89,7 @@ module.exports = {
                     if (typeof settings !== 'object') global.db.data.settings[this.user.jid] = {}
                     if (settings) {
                         if (!('self' in settings)) settings.self = false
-                        if (!('resetlimit' in settings)) settings.resetlimit = false
+                        if (!('resetlimit' in settings)) settings.resetlimit = moment.tz(config.tz).format("HH:mm")
                         if (!('autoread' in settings)) settings.autoread = false
                         if (!('restrict' in settings)) settings.restrict = true
                         if (!('autorestart' in settings)) settings.autorestart = true
@@ -102,7 +102,7 @@ module.exports = {
                     } else global.db.data.settings[this.user.jid] = {
                         self: false,
                         autoread: false,
-                        resetlimit: 0,
+                        resetlimit: moment.tz(config.tz).format("HH:mm"),
                         restrict: true,
                         autorestart: true,
                         restartDB: 0,
@@ -128,17 +128,45 @@ module.exports = {
                 const isBans = global.db.data.users[m.sender].banned
                 if (!isOwner && db.data.settings[this.user.jid].self) return;
                 if (!isOwner && db.data.chats[m.chat].mute) return
+                // Variabel kontrol reset
+                let isResetting = false;
+                let lastResetTime = 0;
 
-                cron.schedule("* * * * *", () => {
-                    let user = Object.keys(db.data.users);
-                    let time = moment.tz(config.tz).format("HH:mm");
-                    if (db.data.settings[this.user.jid].resetlimit == time) {
-                        for (let i of user) {
-                            db.data.users[i].limit = 100;
+                // Di dalam handler:
+                if (isROwner) {
+                    db.data.users[m.sender].limit = 100;
+                }
+
+                // Pengecekan reset limit yang anti-spam
+                const now = Date.now();
+                const resetTime = db.data.settings[this.user.jid].resetlimit;
+
+                if (resetTime && !isResetting) {
+                    const [targetHour, targetMinute] = resetTime.split(':').map(Number);
+                    const currentTime = moment.tz(config.tz);
+
+                    // Cek jika waktu sekarang sama dengan waktu reset
+                    if (currentTime.hours() === targetHour &&
+                        currentTime.minutes() === targetMinute &&
+                        now - lastResetTime > 60000) { // Minimal 1 menit antara reset
+
+                        isResetting = true;
+                        lastResetTime = now;
+
+                        try {
+                            const users = Object.keys(db.data.users);
+                            for (const user of users) {
+                                db.data.users[user].limit = 100;
+                            }
+
+                            console.log(color(`[ LIMIT RESET ] Berhasil direset pukul ${resetTime} untuk ${users.length} pengguna`, 'green'));
+                        } catch (e) {
+                            console.error(color('[ LIMIT RESET ERROR ]', 'red'), e);
+                        } finally {
+                            isResetting = false;
                         }
                     }
-                });
-
+                }
                 if (isROwner) {
                     db.data.users[m.sender].limit = 100
                 }
@@ -264,7 +292,7 @@ module.exports = {
                         if (plugins.loading) { // Both Owner
                             m.reply(`*( Loading )* Tunggu Sebentar...`)
                         }
-                        if (plugins.rowner && !isROwner) { // Real Owner
+                        if (plugins.rowner && !(isROwner || isOwner)) { // Real Owner
                             fail('rowner', m, this)
                             continue
                         }
