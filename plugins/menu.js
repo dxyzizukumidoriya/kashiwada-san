@@ -251,7 +251,7 @@ ${defaultCommands}
                     url: "https://www.npmjs.com/"
                 },
                 mimetype: "application/msword",
-                fileName: config.ownername + ' / ' + config.ownername2,
+                fileName: config.ownername + ' / ' + config.name,
                 fileLength: 10,
                 pageCount: 10,
                 contextInfo: {
