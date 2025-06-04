@@ -9,7 +9,7 @@ import axios from 'axios';
 let handler = async (m, {
     conn
 }) => {
-    const quoted = m.isQuoted ? m.quoted : m;
+    const quoted = m.quoted ? m.quoted : m;
     const mime = (quoted.msg || quoted).mimetype || ''
     if (!/image/.test(mime)) return m.reply(' *[ ! ]* Kirim Gambar/Reply Mau Di Hdkan');
     try {
