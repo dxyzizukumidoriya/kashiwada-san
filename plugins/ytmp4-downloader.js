@@ -1,4 +1,14 @@
-const axios = require('axios')
+// 🔥® Rin-Okumura™ 🔥
+// 👿 Creator: Dxyz
+// ⚡ Plugin: ytmp4-downloader.js
+
+const axios = require('axios');
+const { wrapper } = require('axios-cookiejar-support');
+const FormData = require('form-data');
+const WebSocket = require('ws');
+const cheerio = require('cheerio');
+const { CookieJar } = require('tough-cookie');
+const crypto = require('crypto');
 const apiKey = 'AIzaSyALZVNFzWJVmcBJxRHMbiKvExzzS_DV694';
 
 let handler = async (m, {
@@ -28,14 +38,11 @@ let handler = async (m, {
             link = url;
         };
 
-        await api('https://cloudkutube.eu/api/ytv', {
-            url: link,
-            resolution: resolution
-        }).then(async (ytvapi) => {
+        await convertMedia(link, 'mp4', resolution + 'p').then(async (ytdl) => {
             const result = await googleYoutube(link);
             const thumb = await thumbnail(result.title, config.name, {
                 thumbnailUrl: result.thumbnail
-            }, ytvapi.result.url, true);
+            }, ytdl.download, true);
             const youtubeInfo = `╭───「 🎬 𝗬𝗢𝗨𝗧𝗨𝗕𝗘 𝗗𝗢𝗪𝗡𝗟𝗢𝗔𝗗 𝗜𝗡𝗙𝗢 」───
 │
 │  📌 *Title*: ${result.title || 'No title'}
@@ -66,7 +73,7 @@ let handler = async (m, {
                     }
                 });
 
-            const videoRes = await axios.get(ytvapi.result.url, {
+            const videoRes = await axios.get(ytdl.download, {
                 responseType: "arraybuffer"
             });
             const videoBuffer = Buffer.from(videoRes.data, "binary");
@@ -89,12 +96,6 @@ let handler = async (m, {
         });
     });
 };
-
-handler.help = ['ytmp4', 'ytv', 'ytvideo'].map(v => v + ' *< limk >* ');
-handler.tags = ['downloader']
-handler.command = /^(ytmp4|ytv|ytvideo)$/i;
-
-module.exports = handler;
 
 async function googleYoutube(url) {
     const result = {};
@@ -195,24 +196,180 @@ async function googleYoutube(url) {
     }
 }
 
-async function api(api, params = {}, retries = 5, delay = 2000) {
-    for (let attempt = 1; attempt <= retries; attempt++) {
-        try {
-            const {
-                data
-            } = await axios.get(api, {
-                params
-            })
-            return data
-        } catch (error) {
-            console.error(`Attempt ${attempt} failed: ${error.message}`);
+// Configurations
+const config = {
+  apiBase: {
+    video: 'https://amp4.cc',
+    audio: 'https://amp3.cc'
+  },
+  headers: {
+    Accept: 'application/json',
+    'User-Agent': 'Postify/1.0.0'
+  },
+  ytRegex: /^((?:https?:)?\/\/)?((?:www|m|music)\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=)?(?:embed\/)?(?:v\/)?(?:shorts\/)?([a-zA-Z0-9_-]{11})/,
+  formats: {
+    video: ['144p', '240p', '360p', '480p', '720p', '1080p'],
+    audio: ['64k', '128k', '192k', '256k', '320k']
+  }
+};
 
-            if (attempt < retries) {
-                console.log(`Retrying in ${delay / 1000} seconds...`);
-                await new Promise(res => setTimeout(res, delay));
-            } else {
-                throw new Error("Failed to fetch data after multiple attempts");
-            }
-        }
-    }
+// Initialize HTTP client
+const jar = new CookieJar();
+const client = wrapper(axios.create({ jar }));
+
+// Helper functions
+function validateUrl(url) {
+  if (!url) return { error: "Linknya mana? Yakali download kagak ada linknya 🗿" };
+  const match = url.match(config.ytRegex);
+  if (!match) return { error: "Lu masukin link apaan sih 🗿 Link Youtube aja bree" };
+  return { id: match[3] };
 }
+
+function validateFormat(quality, isAudio) {
+  const available = isAudio ? config.formats.audio : config.formats.video;
+  if (!quality || !available.includes(quality)) {
+    return { 
+      error: "Format kagak ada, pilih yang tersedia aja 🗿",
+      available 
+    };
+  }
+  return true;
+}
+
+// Captcha functions
+async function solveCaptcha(challenge) {
+  const { algorithm, challenge: data, salt, maxnumber } = challenge;
+  
+  for (let i = 0; i <= maxnumber; i++) {
+    const hash = crypto.createHash(algorithm.toLowerCase())
+      .update(salt + i)
+      .digest('hex');
+    if (hash === data) {
+      return Buffer.from(JSON.stringify({
+        algorithm,
+        challenge: data,
+        number: i,
+        salt,
+        signature: challenge.signature,
+        took: Date.now()
+      })).toString('base64');
+    }
+  }
+  throw new Error('Captcha verification failed');
+}
+
+// WebSocket connection
+function createWebSocket(id, isAudio) {
+  return new Promise((resolve, reject) => {
+    const ws = new WebSocket(`wss://${isAudio ? 'amp3' : 'amp4'}.cc/ws`, ['json'], {
+      headers: { ...config.headers, Origin: config.apiBase[isAudio ? 'audio' : 'video'] },
+      rejectUnauthorized: false
+    });
+
+    const timeout = setTimeout(() => {
+      ws.close();
+      reject(new Error('Connection timeout'));
+    }, 30000);
+
+    let fileInfo = {};
+    
+    ws.on('open', () => ws.send(id));
+    ws.on('message', (data) => {
+      const res = JSON.parse(data);
+      if (res.event === 'query' || res.event === 'queue') {
+        fileInfo = { 
+          thumbnail: res.thumbnail, 
+          title: res.title, 
+          duration: res.duration, 
+          uploader: res.uploader 
+        };
+      } else if (res.event === 'file' && res.done) {
+        clearTimeout(timeout);
+        ws.close();
+        resolve({ ...fileInfo, ...res });
+      }
+    });
+    ws.on('error', (err) => {
+      clearTimeout(timeout);
+      reject(err);
+    });
+  });
+}
+
+// Main conversion function
+async function convertMedia(url, format, quality, isAudio = false) {
+  const urlValidation = validateUrl(url);
+  if (urlValidation.error) return { error: urlValidation.error };
+
+  const formatValidation = validateFormat(quality, isAudio);
+  if (formatValidation.error) return formatValidation;
+
+  const baseUrl = config.apiBase[isAudio ? 'audio' : 'video'];
+  const videoId = urlValidation.id;
+
+  try {
+    // Get CSRF token
+    const { data } = await client.get(baseUrl);
+    const $ = cheerio.load(data);
+    const csrfToken = $('meta[name="csrf-token"]').attr('content');
+    if (!csrfToken) throw new Error('CSRF token not found');
+
+    // Prepare form data
+    const form = new FormData();
+    form.append('url', `https://youtu.be/${videoId}`);
+    form.append('format', format);
+    form.append('quality', quality);
+    form.append('service', 'youtube');
+    form.append('_token', csrfToken);
+    if (isAudio) form.append('playlist', 'false');
+
+    // Solve captcha if needed
+    try {
+      const { data: captcha } = await client.get(`${baseUrl}/captcha`, {
+        headers: { ...config.headers, Origin: baseUrl, Referer: baseUrl }
+      });
+      if (captcha) {
+        form.append('altcha', await solveCaptcha(captcha));
+      }
+    } catch (e) {
+      console.log('Captcha skipped', e.message);
+    }
+
+    // Submit conversion request
+    const endpoint = isAudio ? '/convertAudio' : '/convertVideo';
+    const { data: response } = await client.post(`${baseUrl}${endpoint}`, form, {
+      headers: { 
+        ...form.getHeaders(),
+        ...config.headers,
+        Origin: baseUrl,
+        Referer: baseUrl
+      }
+    });
+
+    if (!response.success) throw new Error(response.message);
+
+    // Connect to WebSocket for results
+    const wsResult = await createWebSocket(response.message, isAudio);
+    const downloadUrl = `${baseUrl}/dl/${wsResult.worker}/${response.message}/${encodeURIComponent(wsResult.file)}`;
+
+    return {
+      title: wsResult.title || "No title",
+      type: isAudio ? 'audio' : 'video',
+      format,
+      thumbnail: wsResult.thumbnail || `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`,
+      download: downloadUrl,
+      id: videoId,
+      duration: wsResult.duration,
+      quality,
+      uploader: wsResult.uploader
+    };
+  } catch (error) {
+    return { error: error.message };
+  }
+}
+
+handler.help = ['ytmp4', 'ytv', 'ytvideo'].map(v => v + ' *< limk >* ');
+handler.tags = ['downloader']
+handler.command = /^(ytmp4|ytv|ytvideo)$/i;
+
+module.exports = handler;
