@@ -11,9 +11,14 @@ const delay = ms => isNumber(ms) && new Promise(resolve => setTimeout(resolve, m
 
 module.exports = {
     async handler(chatUpdate) {
+        // Add the requested check at the very beginning
+        if (global.conn && global.conn.user && global.conn.user.jid != conn.user.jid) return;
+        
         if (global.db.data == null) await loadDatabase()
         this.msgqueque = this.msgqueque || []
         if (!chatUpdate) return
+        const userId = chatUpdate.messages[0].key.id;
+        global.block_message = new Set();
         let m = chatUpdate.messages[chatUpdate.messages.length - 1]
         global.settings = global.db.data.settings
         global.fkontak = global.fkontak
@@ -127,20 +132,35 @@ module.exports = {
             if (opts['gconly'] && !m.chat.endsWith('g.us')) return
             if (opts['swonly'] && m.chat !== 'status@broadcast') return
             if (typeof m.text !== 'string') m.text = ''
-
-            const isROwner = [conn.decodeJid(global.conn.user.id), ...config.owner.map((a) => a + "@s.whatsapp.net")].includes(m.sender);
-            const isOwner = isROwner || m.fromMe
+            const isBot = m?.id?.startsWith("3EB0") ||
+               m?.id?.startsWith("FELZ") ||
+               m?.id?.startsWith("F3FD") ||
+               m?.id?.startsWith("SSA") ||
+               m?.id?.startsWith("B1EY") ||
+               m?.id?.startsWith("BAE5") ||
+               m?.id?.startsWith("HSK") ||
+               m?.id?.indexOf("-") > 1;
+            if (isBot) {
+               if (block_message.has(userId)) return;
+               block_message.add(userId);
+               setTimeout(() => block_message.delete(userId), 5 * 60 * 1000);
+            }
+            const isROwner = [
+                ...config.owner.map((a) => a + "@s.whatsapp.net")
+            ].includes(m.sender);
+            const isOwner = isROwner
             const isPrems = global.db.data.users[m.sender].premium
             const isBans = global.db.data.users[m.sender].banned
             if (!isOwner && db.data.settings[this.user.jid].self) return
             if (!isOwner && db.data.chats[m.chat].mute) return
-            
+
             // Variabel kontrol reset
             let isResetting = false
             let lastResetTime = 0
 
             // Di dalam handler:
             if (isROwner) {
+                if (global.conn.user.jid != conn.user.jid) return;
                 db.data.users[m.sender].limit = 100
             }
 
@@ -190,7 +210,7 @@ module.exports = {
                 }, time)
             }
 
-            if (m.isBaileys) return
+            
             m.exp += Math.ceil(Math.random() * 10)
 
             let usedPrefix
