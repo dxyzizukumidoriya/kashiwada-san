@@ -17,7 +17,7 @@ let handler = async (m, { teks, conn, args }) => {
   );
   for (let user of users)
     if (user.endsWith("@s.whatsapp.net"))
-      await conn.groupParticipantsUpdate(m.chat, ['628386872897@s.whatsapp.net'], "remove").then(a => m.reply(JSON.stringify(a, null, 2)));
+      await conn.groupParticipantsUpdate(m.chat, [user], "remove").then(a => m.reply(JSON.stringify(a, null, 2)));
 };
 
 handler.help = ["kick", "kik", "dor", "kon"].map((a) => a + " *[reply/tag user]*");
