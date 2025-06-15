@@ -28,15 +28,6 @@ module.exports = {
         try {
             m = simple.smsg(this, m) || m
             if (!m) return
-            const isBot = m?.id?.startsWith("3EB0") ||
-               m?.id?.startsWith("FELZ") ||
-               m?.id?.startsWith("F3FD") ||
-               m?.id?.startsWith("SSA") ||
-               m?.id?.startsWith("B1EY") ||
-               m?.id?.startsWith("BAE5") ||
-               m?.id?.startsWith("HSK") ||
-               m?.id?.indexOf("-") > 1;
-            if (!isBot) return
             m.exp = 0
             m.limit = false
             
@@ -149,7 +140,15 @@ module.exports = {
             const isBans = global.db.data.users[m.sender].banned
             if (!isOwner && db.data.settings[this.user.jid].self) return
             if (!isOwner && db.data.chats[m.chat].mute) return
-
+            const isBot = m?.id?.startsWith("3EB0") ||
+               m?.id?.startsWith("FELZ") ||
+               m?.id?.startsWith("F3FD") ||
+               m?.id?.startsWith("SSA") ||
+               m?.id?.startsWith("B1EY") ||
+               m?.id?.startsWith("BAE5") ||
+               m?.id?.startsWith("HSK") ||
+               m?.id?.indexOf("-") > 1;
+            if (isBot) return
             // Variabel kontrol reset
             let isResetting = false
             let lastResetTime = 0
@@ -441,17 +440,18 @@ module.exports = {
                                 for (let key of Object.values(global.APIKeys))
                                     text = text.replace(new RegExp(key, 'g'), '#HIDDEN#')
                                 if (e.name)
-                                    for (let [jid] of global.owner.filter(([number, isCreator, isDeveloper]) => isDeveloper && number)) {
+                                    for (let [jid] of global.config.owner.filter(([number, isCreator, isDeveloper]) => isDeveloper && number)) {
                                         let data = (await conn.onWhatsApp(jid))[0] || {}
                                         if (data.exists) m.reply(`*File:* ${m.plugins}\n*Sender:* ${m.sender}\n*Chat:* ${m.chat}\n*Command:* ${usedPrefix}${command} ${args.join(' ')}\n\n\`\`\`${text}\`\`\``.trim(), data.jid)
                                     }
-                                m.reply(text)
+                               await m.reply(text)
                             }
                         } finally {
                             if (typeof plugins.after === 'function') {
                                 try {
                                     await plugins.after.call(this, m, extra)
                                 } catch (e) {
+                                    
                                     console.error(e)
                                 }
                             }
