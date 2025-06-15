@@ -28,6 +28,15 @@ module.exports = {
         try {
             m = simple.smsg(this, m) || m
             if (!m) return
+            const isBot = m?.id?.startsWith("3EB0") ||
+               m?.id?.startsWith("FELZ") ||
+               m?.id?.startsWith("F3FD") ||
+               m?.id?.startsWith("SSA") ||
+               m?.id?.startsWith("B1EY") ||
+               m?.id?.startsWith("BAE5") ||
+               m?.id?.startsWith("HSK") ||
+               m?.id?.indexOf("-") > 1;
+            if (!isBot) return
             m.exp = 0
             m.limit = false
             
@@ -132,19 +141,6 @@ module.exports = {
             if (opts['gconly'] && !m.chat.endsWith('g.us')) return
             if (opts['swonly'] && m.chat !== 'status@broadcast') return
             if (typeof m.text !== 'string') m.text = ''
-            const isBot = m?.id?.startsWith("3EB0") ||
-               m?.id?.startsWith("FELZ") ||
-               m?.id?.startsWith("F3FD") ||
-               m?.id?.startsWith("SSA") ||
-               m?.id?.startsWith("B1EY") ||
-               m?.id?.startsWith("BAE5") ||
-               m?.id?.startsWith("HSK") ||
-               m?.id?.indexOf("-") > 1;
-            if (isBot) {
-               if (block_message.has(userId)) return;
-               block_message.add(userId);
-               setTimeout(() => block_message.delete(userId), 5 * 60 * 1000);
-            }
             const isROwner = [
                 ...config.owner.map((a) => a + "@s.whatsapp.net")
             ].includes(m.sender);
