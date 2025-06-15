@@ -1,3 +1,7 @@
+// 🔥® Rin-Okumura™ 🔥
+// 👿 Creator: Dxyz
+// ⚡ Plugin: add-group.js
+
 let handler = async (m, { teks, conn, args }) => {
   let ownerGroup = m.chat.split`-`[0] + "@s.whatsapp.net";
   if (m.quoted) {
