@@ -14,11 +14,15 @@ let handler = async (m, {
     if (!/image/.test(mime)) return m.reply(' *[ ! ]* Kirim Gambar/Reply Mau Di Hdkan');
     try {
         const download = await quoted.download();
-        const filePath = path.join(process.cwd() + `/system/tmp/image-${Date.now()}.jpg`);
-        if (!fs.existsSync(filePath)) {
-            fs.writeFileSync(filePath, download);
-            console.log(`File ${filePath} dibuat.`);
+        const tmpDir = './tmp';
+        const filePath = path.join(process.cwd() + `/tmp/image-${Date.now()}.jpg`);
+        
+        if (!fs.existsSync(tmpDir)) {
+           fs.mkdirSync(tmpDir);
         }
+
+        fs.writeFileSync(filePath, download);
+        console.log(`File ${filePath} dibuat.`);
         const url = await upscale(filePath);
         const buffer = await (await axios.get(url.result.imageUrl, {
             responseType: 'arraybuffer'
@@ -30,6 +34,8 @@ let handler = async (m, {
                 image: Buffer.from(buffer),
                 caption
             });
+        fs.unlinkFileSync(filePath);
+        console.log(`File ${filePath} dihapus`);
     } catch (e) {
         conn.reply('❌Maaf Error Mungkin Kebanyakan Request Mungkin');
         console.error('Error:', e);
