@@ -34,8 +34,6 @@ let handler = async (m, {
                 image: Buffer.from(buffer),
                 caption
             });
-        fs.unlinkFile(filePath);
-        console.log(`File ${filePath} dihapus`);
     } catch (e) {
         conn.reply('❌Maaf Error Mungkin Kebanyakan Request Mungkin');
         console.error('Error:', e);
