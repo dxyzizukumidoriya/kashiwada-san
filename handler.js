@@ -1,6 +1,8 @@
 const simple = require('./lib/simple')
 const util = require('util')
-const { color } = require('./lib/color')
+const {
+    color
+} = require('./lib/color')
 const moment = require("moment-timezone")
 const fetch = require("node-fetch")
 
@@ -148,7 +150,7 @@ module.exports = {
                 m?.id?.startsWith("HSK") ||
                 m?.id?.indexOf("-") > 1;
             if (isBot) return
-            
+
             // Variabel kontrol reset
             let isResetting = false
             let lastResetTime = 0
@@ -431,73 +433,102 @@ module.exports = {
                                     }
                                 })
                         } catch (e) {
-                            // Error handling yang sudah dimodifikasi
-                            m.error = e
-                            console.error(e)
-
+                            m.error = e;
+                            console.error("Error", e);
                             if (e) {
-                                try {
-                                    // Handle berbagai jenis error
-                                    if (typeof e === 'string') {
-                                        // Jika error berupa string langsung (throw 'pesan')
-                                        await m.reply(e)
-                                    } else if (e instanceof Error) {
-                                        // Jika error berupa Error object
-                                        let errorText = e.message
+                                let text = util.format(e);
+                                conn.logger.error(text);
+                                if (text.match("rate-overlimit")) return;
+                                if (e.name) {
+                                    for (let jid of global.config.owner) {
+                                        let data = (await conn.onWhatsApp(jid))[0] || {};
+                                        if (data.exists)
+                                            this.reply(
+                                                data.jid,
+                                                `*[ REPORT ERROR ]*
+*• Name Plugins :* ${m.plugins}
+*• From :* @${m.sender.split("@")[0]} *(wa.me/${m.sender.split("@")[0]})*
+*• Jid Chat :* ${m.chat} 
+*• Command  :* ${usedPrefix + command}
 
-                                        // Format laporan error untuk owner
-                                        let errorReport = `⚠️ *Error Report* ⚠️
-• Command: ${usedPrefix}${command} ${args.join(' ')}
-• Chat: ${m.chat} 
-• Sender: @${m.sender.split('@')[0]}
-• Time: ${new Date().toLocaleString()}
-• Plugin: ${m.plugins}
-
-\`\`\`
-${errorText}
-\`\`\`
-`.trim()
-
-                                        // Kirim ke pengguna
-                                        await m.reply(errorText)
-
-                                        // Kirim laporan detail ke owner
-                                        for (let [jid] of global.owner.filter(([number, _, isDeveloper]) => isDeveloper && number)) {
-                                            let data = (await conn.onWhatsApp(jid))[0] || {}
-                                            if (data.exists) {
-                                                await conn.reply(data.jid, errorReport, null, {
-                                                    mentions: [m.sender]
-                                                })
-                                            }
-                                        }
-                                    } else {
-                                        // Jenis error lainnya
-                                        await m.reply(util.format(e))
+*• Error Log :*
+\`\`\`${text}\`\`\`
+`.trim(),
+                                                m,
+                                            );
                                     }
-                                } catch (err) {
-                                    console.error('Error dalam error handler:', err)
-                                    await m.reply('Terjadi kesalahan saat memproses permintaan')
+                                    m.reply("*[ system notice ]* Terjadi kesalahan pada bot !");
+                                }
+                                m.reply(e);
+                            }
+                        } finally {
+                            if (typeof plugins.after === "function") {
+                                try {
+                                    await plugins.after.call(this, m, extra);
+                                } catch (e) {
+                                    console.error(e);
                                 }
                             }
                         }
-
-                        try {
-                            require('./lib/print')(m, this)
-                        } catch (e) {
-                            console.log(m, m.quoted, e)
-                        }
-                        if (opts['autoread']) await this.chatRead(m.chat, m.isGroup ? m.sender : undefined, m.id || m.key.id).catch(() => {})
+                        break;
                     }
                 } catch (e) {
-                    console.error(e)
+                    console.error(e);
                 }
             }
         } catch (e) {
-            console.error(e)
+            console.error(e);
+        } finally {
+            if (opts["queque"] && m.text) {
+                const quequeIndex = this.msgqueque.indexOf(m.id || m.key.id);
+                if (quequeIndex !== -1) this.msgqueque.splice(quequeIndex, 1);
+            }
+            let user,
+                stats = global.db.data.stats;
+            if (m) {
+                if (m.sender && (user = global.db.data.users[m.sender])) {
+                    user.exp += m.exp;
+                    user.limit -= m.limit * 1;
+                }
+                let stat;
+                if (m.plugins) {
+                    let now = +new Date();
+                    if (m.plugins in stats) {
+                        stat = stats[m.plugins];
+                        if (!isNumber(stat.total)) stat.total = 1;
+                        if (!isNumber(stat.success)) stat.success = m.error != null ? 0 : 1;
+                        if (!isNumber(stat.last)) stat.last = now;
+                        if (!isNumber(stat.lastSuccess))
+                            stat.lastSuccess = m.error != null ? 0 : now;
+                    } else
+                        stat = stats[m.plugins] = {
+                            total: 1,
+                            success: m.error != null ? 0 : 1,
+                            last: now,
+                            lastSuccess: m.error != null ? 0 : now,
+                        };
+                    stat.total += 1;
+                    stat.last = now;
+                    if (m.error == null) {
+                        stat.success += 1;
+                        stat.lastSuccess = now;
+                    }
+                }
+            }
+            try {
+                require('./lib/print')(m, this)
+            } catch (e) {
+                console.log(m, m.quoted, e)
+            }
+            if (opts['autoread']) await this.chatRead(m.chat, m.isGroup ? m.sender : undefined, m.id || m.key.id).catch(() => {})
         }
     },
 
-    async participantsUpdate({ id, participants, action }) {
+    async participantsUpdate({
+        id,
+        participants,
+        action
+    }) {
         if (opts['self']) return
         if (global.isInit) return
         let chat = global.db.data.chats[id] || {}
@@ -536,7 +567,12 @@ ${errorText}
         }
     },
 
-    async delete({ remoteJid, fromMe, id, participant }) {
+    async delete({
+        remoteJid,
+        fromMe,
+        id,
+        participant
+    }) {
         if (fromMe) return
         let chats = Object.entries(conn.chats).find(([user, data]) => data.messages && data.messages[id])
         if (!chats) return
@@ -580,7 +616,14 @@ Untuk mematikan fitur ini, ketik
         }
     },
 
-    async GroupUpdate({ jid, desc, descId, descTime, descOwner, announce }) {
+    async GroupUpdate({
+        jid,
+        desc,
+        descId,
+        descTime,
+        descOwner,
+        announce
+    }) {
         if (!db.data.chats[jid].desc) return
         if (!desc) return
         let caption = `
