@@ -6,7 +6,7 @@ import baileys from "@adiwajshing/baileys";
 import axios from "axios";
 
 export default {
-    help: ['tiktok', 'ttdl', 'tt', 'tiktokdl'].map(v => ` ${v} *[ Link TikTok ]* `),
+    help: ['tiktok', 'ttdl', 'tt', 'tiktokdl'].map(v => `${v} *[ Link TikTok ]* `),
     tags: ['downloader'],
     command: ['tiktok', 'ttdl', 'tt', 'tiktokdl'],
     loading: true,
