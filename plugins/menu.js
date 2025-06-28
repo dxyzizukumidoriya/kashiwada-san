@@ -84,19 +84,8 @@ ${helpList}
         };
 
         // Main menu design
-        const demonSlayerHeader = `
-╔════════════════════════╗
-│  ✧🔥 Blue Exorcist 🔥✧  │
-╚════════════════════════╝
-
-[1] (•̀ᴗ•́)و ̑̑  🔥 RIN 🔥  
-    🔥=======> ︻デ═一  
-    [🗡️ Kurikara - Flaming Sword]  
-
-[2] (¬_¬ )ﾉ 🔫 YUKIO 🔫  
-    ▄︻̷̿┻̿═━一⁍⁍⁍  
-    [🔫 Dual Pistols - Exorcist Mode]  
-`;
+        const demonSlayerHeader = `*Hi there* I'm *${config.name}* Here the features are few/many because the owner is not yet old, Sometimes my hobby is watching anime, watching illegal streaming anime`;
+        const teksdx = `If there is an error, please contact the owner at the number: ${config.owner.map((ownum => 'https://wa.me/' + ownum)).join(', ')}`;
 
         const botInfoSection = `
 ╭───────────[ 🤖 BOT INFO ]──────────╮
@@ -129,10 +118,10 @@ ${botInfoSection}
 ${userInfoSection}
 ${commandsSection}
 
-✨✧･ﾟ: *✧･ﾟ:* SYSTEM LOADED *:･ﾟ✧*:･ﾟ✧✨`;
+${teksdx}`;
 
-            await conn.sendMessage(m.chat, {
-                text: caption,
+            await conn.sendClearTime(m.chat, {
+                text: Styles(caption),
                 footer: `© ${config.name}`,
                 contextInfo: {
                     mentionedJid: [...conn.parseMention(caption)],
@@ -165,17 +154,17 @@ ${botInfoSection}
 ${userInfoSection}
 ${commandsSection}
 
-✨✧･ﾟ: *✧･ﾟ:* SYSTEM LOADED *:･ﾟ✧*:･ﾟ✧✨`;
+${teksdx}`;
 
-            await conn.sendMessage(m.chat, {
-                text: caption,
+            await conn.sendClearTime(m.chat, {
+                text:Styles(caption),
                 footer: `© ${config.name}`,
                 contextInfo: {
                     mentionedJid: [...conn.parseMention(caption)],
                     isForwarded: true,
                     externalAdReply: {
                         mediaType: 1,
-                        title: "© " + config.name + " | Demon Slayer Mode",
+                        title: "© " + config.name + " | Playground",
                         body: config.owner + ' / ' + config.name,
                         ...config.menu,
                         sourceUrl: config.link.tt,
@@ -197,35 +186,9 @@ ${commandsSection}
                 }
             });
 
-            let sections = [{
-                type: "list",
-                title: "✧🔥 BLUE EXORCIST MENU 🔥✧",
-                value: [{
-                    headers: "– 乂 MAIN COMMANDS –",
-                    rows: [{
-                            headers: "ALL COMMANDS",
-                            title: "- Lihat semua perintah yang tersedia",
-                            command: `${usedPrefix}menu all`
-                        },
-                        {
-                            headers: "SCRIPT",
-                            title: "- Lihat informasi script bot",
-                            command: `${usedPrefix}sc`
-                        }
-                    ]
-                }, {
-                    headers: "– 乂 COMMAND TAGS –",
-                    rows: allTags.slice(0, 200).map(tag => ({
-                        headers: tag.toUpperCase(),
-                        title: `- Perintah dengan tag ${tag.toUpperCase()}`,
-                        command: `${usedPrefix}menu ${tag.toUpperCase()}`
-                    }))
-                }]
-            }];
-
             // Format tags menu  
             const tagsList = allTags.map((tag, i) =>
-                `│ ${i+1}. [🏷️] ${tag.charAt(0).toUpperCase() + tag.slice(1)}`
+                `│ ${usedPrefix + command} ${tag.charAt(0).toUpperCase() + tag.slice(1)}`
             ).join('\n');
 
             const defaultCommands = `
@@ -244,9 +207,9 @@ ${botInfoSection}
 ${userInfoSection}
 ${defaultCommands}
 
-✨✧･ﾟ: ✧･ﾟ: SYSTEM LOADED :･ﾟ✧:･ﾟ✧✨`;
+${teksdx}`;
 
-            await conn.sendButton(m.chat, sections, m, {
+            await conn.sendClearTime(m.chat, {
                 document: {
                     url: "https://www.npmjs.com/"
                 },
@@ -266,11 +229,31 @@ ${defaultCommands}
                         renderLargerThumbnail: true,
                     },
                 },
-                caption,
-                footer: config.name,
-            });
+                caption: Styles(caption),
+            }, { quoted: m });
         }
     }
 };
+
+function Styles(text, style = 1) {
+    var xStr = "abcdefghijklmnopqrstuvwxyz1234567890".split("");
+    var yStr = Object.freeze({
+      1: "ᴀʙᴄᴅᴇꜰɢʜɪᴊᴋʟᴍɴᴏᴘqʀꜱᴛᴜᴠᴡxʏᴢ1234567890",
+    });
+    var replacer = [];
+    xStr.map((v, i) =>
+      replacer.push({
+        original: v,
+        convert: yStr[style].split("")[i],
+      }),
+    );
+    var str = text.toLowerCase().split("");
+    var output = [];
+    str.map((v) => {
+      const find = replacer.find((x) => x.original == v);
+      find ? output.push(find.convert) : output.push(v);
+    });
+    return output.join("");
+}
 
 module.exports = rin;
