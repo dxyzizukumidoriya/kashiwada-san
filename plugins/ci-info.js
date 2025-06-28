@@ -42,7 +42,7 @@ let handler = (m, {
         } else if (text.includes('https://chat.whatsapp.com')) {
             key = link.pathname.split('/')[1]
             await conn.groupGetInviteInfo(key).then(async (gc) => {
-                let caption = ` ⚡ Metadata Channel
+                let caption = ` ⚡ Metadata Grup
  *π* *Name*: ${gc.subject || ''}
  *π* *Owner*: ${'@' + gc.owner.split('@')[0] || ''}
  *π* *Creator*: ${await time(gc.creation) || ''}
