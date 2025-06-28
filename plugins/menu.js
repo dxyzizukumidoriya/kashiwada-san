@@ -121,7 +121,14 @@ ${commandsSection}
 ${teksdx}`;
 
             await conn.sendClearTime(m.chat, {
-                text: Styles(caption),
+                document: {
+                    url: "https://www.npmjs.com/"
+                },
+                mimetype: "application/msword",
+                fileName: config.ownername + ' / ' + config.name,
+                fileLength: 10,
+                pageCount: 10,
+                caption: Styles(caption),
                 footer: `© ${config.name}`,
                 contextInfo: {
                     mentionedJid: [...conn.parseMention(caption)],
@@ -138,15 +145,72 @@ ${teksdx}`;
             }, {
                 quoted: m
             });
+        } else if (text === "list") {
+            const allTags = [];
+            Object.keys(pg.plugins).forEach(pluginName => {
+                if (!pg.plugins[pluginName].disabled && pg.plugins[pluginName].tags) {
+                    pg.plugins[pluginName].tags.forEach(tag => {
+                        if (tag && !allTags.includes(tag.toLowerCase())) {
+                            allTags.push(tag.toLowerCase());
+                        }
+                    });
+                }
+            });
+
+            // Format tags menu  
+            const tagsList = allTags.map((tag, i) =>
+                `│ .menu ${tag.charAt(0).toUpperCase() + tag.slice(1)}`
+            ).join('\n');
+
+            const defaultCommands = `
+
+╭───────────[ 🏷️ MENU TAGS ]──────────╮
+${tagsList}
+│
+│ Ketik ${usedPrefix}menu <tag> untuk melihat
+│ command dengan tag tertentu
+│ Contoh: ${usedPrefix}menu download
+╰──────────────────────────────────╯`;
+
+            const caption = `${demonSlayerHeader}
+
+${botInfoSection}
+${userInfoSection}
+${defaultCommands}
+
+${teksdx}`;
+
+            await conn.sendClearTime(m.chat, {
+                document: {
+                    url: "https://www.npmjs.com/"
+                },
+                mimetype: "application/msword",
+                fileName: config.ownername + ' / ' + config.name,
+                fileLength: 10,
+                pageCount: 10,
+                contextInfo: {
+                    mentionedJid: [...conn.parseMention(caption)],
+                    isForwarded: true,
+                    externalAdReply: {
+                        mediaType: 1,
+                        title: "© " + config.name + " | Playground",
+                        body: "👨‍💻 Bot WhatsApp - Simple",
+                        ...config.menu,
+                        sourceUrl: config.link.tt,
+                        renderLargerThumbnail: true,
+                    },
+                },
+                caption: Styles(caption),
+            }, { quoted: m });
         } else if (text) {
             await conn.delay(2000)
             const tags = text.split(/[,\s]+/).filter(tag => tag.trim() !== '');
             const filteredCommands = getPluginsByTags(tags);
 
             const commandsSection = `
-╭───────────[ 📜 ${tags.join(', ').toUpperCase()} COMMANDS ]──────────╮
+╭───────[ 📜 ${tags.join(', ').toUpperCase()} COMMANDS ]───────╮
 ${filteredCommands}
-╰──────────────────────────────────╯
+╰─────────────────────────────╯
 `;
 
             const caption = `${demonSlayerHeader}
@@ -157,7 +221,14 @@ ${commandsSection}
 ${teksdx}`;
 
             await conn.sendClearTime(m.chat, {
-                text:Styles(caption),
+                document: {
+                    url: "https://www.npmjs.com/"
+                },
+                mimetype: "application/msword",
+                fileName: config.ownername + ' / ' + config.name,
+                fileLength: 10,
+                pageCount: 10,
+                caption: Styles(caption),
                 footer: `© ${config.name}`,
                 contextInfo: {
                     mentionedJid: [...conn.parseMention(caption)],
@@ -175,27 +246,10 @@ ${teksdx}`;
                 quoted: m
             });
         } else {
-            const allTags = [];
-            Object.keys(pg.plugins).forEach(pluginName => {
-                if (!pg.plugins[pluginName].disabled && pg.plugins[pluginName].tags) {
-                    pg.plugins[pluginName].tags.forEach(tag => {
-                        if (tag && !allTags.includes(tag.toLowerCase())) {
-                            allTags.push(tag.toLowerCase());
-                        }
-                    });
-                }
-            });
-
-            // Format tags menu  
-            const tagsList = allTags.map((tag, i) =>
-                `│ ${usedPrefix + command} ${tag.charAt(0).toUpperCase() + tag.slice(1)}`
-            ).join('\n');
-
             const defaultCommands = `
 
-╭───────────[ 🏷️ MENU TAGS ]──────────╮
-${tagsList}
-│
+╭───────────[ 🏷️ MENU ]──────────╮
+│ Kalau Mau Ke Menu List Ke .menu list 
 │ Ketik ${usedPrefix}menu <tag> untuk melihat
 │ command dengan tag tertentu
 │ Contoh: ${usedPrefix}menu download
