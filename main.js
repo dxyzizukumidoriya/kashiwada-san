@@ -292,43 +292,51 @@
     }, milliseconds);
     let isInit = true,
         handler = require('./handler')
-    reloadHandler = function(restatConn) {
-        let Handler = require('./handler')
-        if (Object.keys(Handler || {}).length) handler = Handler
-        if (restatConn) {
-            try {
-                conn.ws.close()
-            } catch {}
-            conn = {
-                ...conn,
-                ...simple.makeWASocket(connectionOptions)
-            }
-        }
-        if (!isInit) {
-            conn.ev.off('messages.upsert', conn.handler)
-            conn.ev.off('group-participants.update', conn.onParticipantsUpdate)
-            conn.ev.off('message.delete', conn.onDelete)
-            conn.ev.off('connection.update', conn.connectionUpdate)
-            conn.ev.off('creds.update', conn.credsUpdate)
-        }
+    reloadHandler = function(restartConn) {
+      let Handler = require('./handler')
+      if (Object.keys(Handler || {}).length) handler = Handler
+    
+      if (restartConn) {
+          try {
+              conn.ws.close()
+          } catch {}
+          conn = {
+              ...conn,
+              ...simple.makeWASocket(connectionOptions)
+          }
+      }
 
-        conn.welcome = 'Selamat datang @user 👋'
-        conn.bye = 'Selamat tinggal @user 👋'
-        conn.spromote = '@user sekarang admin!'
-        conn.sdemote = '@user sekarang bukan admin!'
-        conn.handler = handler.handler.bind(conn)
-        conn.onParticipantsUpdate = handler.participantsUpdate.bind(conn)
-        conn.onDelete = handler.delete.bind(conn)
-        conn.connectionUpdate = connectionUpdate.bind(conn)
-        conn.credsUpdate = saveCreds.bind(conn)
+      // Initialize all handlers first
+      conn.welcome = 'Selamat datang @user 👋'
+      conn.bye = 'Selamat tinggal @user 👋'
+      conn.spromote = '@user sekarang admin!'
+      conn.sdemote = '@user sekarang bukan admin!'
+    
+    // Make sure these are properly defined
+      conn.handler = handler.handler ? handler.handler.bind(conn) : () => {}
+      conn.onParticipantsUpdate = handler.participantsUpdate ? handler.participantsUpdate.bind(conn) : () => {}
+      conn.onDelete = handler.onDelete ? handler.onDelete.bind(conn) : () => {}
+      conn.connectionUpdate = connectionUpdate.bind(conn)
+      conn.credsUpdate = saveCreds.bind(conn)
 
-        conn.ev.on('messages.upsert', conn.handler)
-        conn.ev.on('group-participants.update', conn.onParticipantsUpdate)
-        conn.ev.on('message.delete', conn.onDelete)
-        conn.ev.on('connection.update', conn.connectionUpdate)
-        conn.ev.on('creds.update', conn.credsUpdate)
-        isInit = false
-        return true
+    // Remove existing listeners if any
+      if (!isInit) {
+          conn.ev.off('messages.upsert', conn.handler)
+          conn.ev.off('group-participants.update', conn.onParticipantsUpdate)
+          conn.ev.off('message.delete', conn.onDelete)
+          conn.ev.off('connection.update', conn.connectionUpdate)
+          conn.ev.off('creds.update', conn.credsUpdate)
+      }
+
+    // Add new listeners
+      conn.ev.on('messages.upsert', conn.handler)
+      conn.ev.on('group-participants.update', conn.onParticipantsUpdate)
+      conn.ev.on('message.delete', conn.onDelete)
+      conn.ev.on('connection.update', conn.connectionUpdate)
+      conn.ev.on('creds.update', conn.credsUpdate)
+    
+      isInit = false
+      return true
     }
     global.pg = new(await require(process.cwd() + "/lib/plugins"))(
         process.cwd() + "/plugins",
