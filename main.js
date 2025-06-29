@@ -287,7 +287,7 @@
 
     console.log(`⏳ Script akan restart dalam ${hours} jam (${milliseconds / 1000} detik)`);
     setTimeout(() => {
-       console.log("🔁 5 jam sudah lewat, restart sekarang...");
+       console.log(`🔁 ${hours} jam sudah lewat, restart sekarang...`);
        process.exit(0); // keluar, dan kalau pakai PM2 atau sejenis, akan auto restart
     }, milliseconds);
     let isInit = true,
