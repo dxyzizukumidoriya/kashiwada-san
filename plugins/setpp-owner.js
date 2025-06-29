@@ -1,52 +1,106 @@
-// 🔥® Rin-Okumura™ 🔥
-// 👿 Creator: Dxyz
-// ⚡ Plugin: setpp-owner.js
+const jimp_1 = require('jimp');
+let URL_REGEX, jidNormalizedUser, S_WHATSAPP_NET;
 
-const Jimp = require("jimp");
-
-class Command {
-    constructor() {
-        this.command = ["setppbot", "setpp", "setppbotwa"]
-        this.help = ["setppbot", "setpp", "setppbotwa"];
-        this.tags = ["owner"];
-        this.owner = true;
-        this.loading = true;
+try {
+    ({
+        URL_REGEX,
+        jidNormalizedUser,
+        S_WHATSAPP_NET
+    } = require('@adiwajshing/baileys'));
+} catch (error1) {
+    try {
+        ({
+            URL_REGEX,
+            jidNormalizedUser,
+            S_WHATSAPP_NET
+        } = require('@adiwajshing/baileys'));
+    } catch (error2) {
+        throw new Error('Gagal mengimpor dependensi dari kedua modul.');
     }
+}
 
-    code = async (m, {
-        conn,
-        usedPrefix,
-        command
-    }) => {
-        let q = m.quoted ? m.quoted : m;
-        let mime = (q.msg || q).mimetype || q.mediaType || "";
+let deku = async (m, { ctx, args, usedPrefix, command }) => {
+    let q = m.quoted ? m.quoted : m;
+    let mime = (q.msg || q).mimetype || q.mediaType || '';
+    let botNumber = await ctx.user.id;
 
-        if (/image/g.test(mime) && !/webp/g.test(mime)) {
+    if (/image/g.test(mime) && !/webp/g.test(mime)) {
+        try {
             let media = await q.download();
             let {
                 img
             } = await pepe(media);
-            await conn.updateProfilePicture(conn.decodeJid(conn.user.id), img);
-            m.reply(
-                " *π* 🎉 *Berhasil mengubah profile picture bot!* 🎉\n *π* *Foto profil bot telah diperbarui.*",
-            );
-        } else {
-            m.reply(
-                " *[ ! ]* *Balas/Kirim gambar yang ingin dijadikan profile picture bot.*\n *π* Pastikan gambar yang dikirim tidak dalam format webp.",
-            );
+
+            await ctx.query({
+                tag: 'iq',
+                attrs: {
+                    to: S_WHATSAPP_NET,
+                    type: 'set',
+                    xmlns: 'w:profile:picture',
+                },
+                content: [{
+                    tag: 'picture',
+                    attrs: {
+                        type: 'image'
+                    },
+                    content: img,
+                }, ],
+            });
+
+            m.reply(`Sukses mengganti PP Bot`);
+        } catch (e) {
+            console.error(e);
+            m.reply(`Terjadi kesalahan, coba lagi nanti.`);
         }
-    };
+    } else if (args[0] && args[0].match(URL_REGEX)) {
+        try {
+            let {
+                img
+            } = await pepe(m.args[0]);
+
+            await ctx.query({
+                tag: 'iq',
+                attrs: {
+                    to: S_WHATSAPP_NET,
+                    type: 'set',
+                    xmlns: 'w:profile:picture',
+                },
+                content: [{
+                    tag: 'picture',
+                    attrs: {
+                        type: 'image'
+                    },
+                    content: img,
+                }, ],
+            });
+
+            m.reply(`Sukses mengganti PP Bot`);
+        } catch (e) {
+            console.error(e);
+            m.reply(`Terjadi kesalahan, coba lagi nanti.`);
+        }
+    } else {
+        m.reply(`Kirim gambar dengan caption *${usedPrefix + command}* atau tag gambar yang sudah dikirim`);
+    }
 }
-module.exports = new Command();
 
 async function pepe(media) {
-    const jimp = await Jimp.read(media),
-        min = jimp.getWidth(),
-        max = jimp.getHeight(),
-        cropped = jimp.crop(0, 0, min, max);
+    const jimp = await jimp_1.read(media);
+    const min = jimp.getWidth();
+    const max = jimp.getHeight();
+    const cropped = jimp.crop(0, 0, min, max);
 
     return {
-        img: await cropped.scaleToFit(720, 720).getBufferAsync(Jimp.MIME_JPEG),
-        preview: await cropped.normalize().getBufferAsync(Jimp.MIME_JPEG),
+        img: await cropped.scaleToFit(720, 720).getBufferAsync(jimp_1.MIME_JPEG),
+        preview: await cropped.normalize().getBufferAsync(jimp_1.MIME_JPEG),
     };
 }
+
+deku.loading = true
+deku.owner = true
+
+deku.help = ["setppbot", "setpp"].map(v => v + ' *[ Set/Ganti Profile Bot ]* ');
+deku.command = ["setppbot", "setpp"];
+deku.tags = ["owner"];
+
+module.exports = deku;
