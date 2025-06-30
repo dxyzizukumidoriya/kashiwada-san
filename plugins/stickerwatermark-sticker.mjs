@@ -17,7 +17,7 @@ let izuku = async (m, {
 }) => {
     let q = m.quoted ? m.quoted : m
     let mime = (q.msg || q).mimetype || q.mediaType || '';
-    if (!/webp/.test(mime)) throw ` *[ ! ]* Reply Sticker Buat Wm ! Contoh: ${usedPrefix + command} hai|aku dxyz`;
+    if (!/webp/.test(mime)) throw ` *[ ! ]* Reply Sticker Buat Wm ! Contoh: ${usedPrefix + command} hai | aku dxyz`;
 
     let [wm1, wm2] = text.split(' | ')
     if (!wm1 && !wm2) throw ' *[ ! ]* Mana Wm1 | Wm2 Nya !';
