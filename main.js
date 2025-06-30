@@ -282,14 +282,76 @@
 
     //=====[ Setelah Pembaruan Koneksi ]========//
     conn.ev.on("creds.update", saveCreds);
-    const hours = 9;
-    const milliseconds = hours * 60 * 60 * 1000; // 5 jam -> 18000000 ms
+    
+    async function tampilkanKeep() {
+       // Nama file tetap 'keep.txt'
+       const FILENAME = 'keep.txt';
+       const tmpDir = path.join(__dirname, 'tmp');
+       const filePath = path.join(tmpDir, FILENAME);
 
-    console.log(`⏳ Script akan restart dalam ${hours} jam (${milliseconds / 1000} detik)`);
+       try {
+          // Cek apakah folder tmp ada
+          if (!fs.existsSync(tmpDir)) {
+              fs.mkdirSync(tmpDir);
+              console.log('📁 Folder tmp dibuat');
+          }
+
+          // Baca file dengan Promise wrapper
+          const content = await new Promise((resolve, reject) => {
+              fs.readFile(filePath, 'utf8', (err, data) => {
+                  if (err) {
+                      if (err.code === 'ENOENT') {
+                          resolve(''); // Return string kosong jika file belum ada
+                      } else {
+                          reject(err);
+                      }
+                  } else {
+                      resolve(data);
+                  }
+              });
+          });
+
+          console.log(`📝 Isi file ${FILENAME}:\n${content || '(File kosong)'}`);
+          return content;
+       } catch (error) {
+           console.error('❌ Gagal:', error.message);
+           throw error;
+       }
+    }
+    
+    await tampilkanKeep();
+
+    async function clearTmp() {
+       const tmpDir = path.join(__dirname, 'tmp');
+
+       try {
+          await fs.rm(tmpDir, { recursive: true, force: true });
+          console.log('✅ Folder tmp berhasil dihapus.');
+       } catch (error) {
+          if (error.code === 'ENOENT') {
+              console.log('ℹ️ Folder tmp tidak ada, tidak perlu dihapus.');
+          } else {
+             console.error('❌ Gagal menghapus tmp:', error.message);
+          }
+       }
+    };
+    
+    async function jam(hours) {
+      const milliseconds = hours * 60 * 60 * 1000; // 5 jam -> 18000000 ms
+      return milliseconds
+    };
+
+    setTimeout(async() => {
+       console.log(`🗑️5 jam sudah lewat, Hapus File Tmp`);
+       await clearTmp();
+    }, await jam(5));
+
+    console.log(`⏳ Script akan restart dalam 9 jam (${jam(9) / 1000} detik)`);
     setTimeout(() => {
-       console.log(`🔁 ${hours} jam sudah lewat, restart sekarang...`);
+       console.log(`🔁 9 jam sudah lewat, restart sekarang...`);
        process.exit(0); // keluar, dan kalau pakai PM2 atau sejenis, akan auto restart
-    }, milliseconds);
+    }, await jam(9));
+    
     let isInit = true,
         handler = require('./handler')
     reloadHandler = function(restartConn) {
@@ -338,6 +400,11 @@
       isInit = false
       return true
     }
+    global.scraper = new (await require(process.cwd() + "/scrapers"))(
+      process.cwd() + "/scrapers/src",
+    );
+    await scraper.watch();
+
     global.pg = new(await require(process.cwd() + "/lib/plugins"))(
         process.cwd() + "/plugins",
     );
@@ -346,8 +413,10 @@
     reloadHandler()
 
     setInterval(async () => {
-        await pg.load();
+       await pg.load();
+       await scraper.load();
     }, 2000);
+    global.Scraper = await scraper.list()
     // Quick Test
     async function _quickTest() {
         let test = await Promise.all([
