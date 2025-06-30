@@ -64,22 +64,22 @@ let izuku = async (m, {
     }
 }
 
-
+izuku.group = true;
+izuku.admin = true;
+izuku.botAdmin = true;
 
 izuku.before = async (m, {
     conn
 }) => {
-    if (!m.isGroup) return
+    if (!m.isGroup) return;
     let nomor = m.sender.split('@')[0]
     if (db.data.chats[m.sender]?.blacklist?.includes(nomor)) {
-        await conn.sendMessage(
-            m.chat, {
-                delete: m.key
-            })
+        return sock.sendMessage(m.chat, {
+            delete: m.key
+        });
     }
 }
 
-izuku.owner = true
 izuku.help = ['black', 'blacklist', 'unblack']
 izuku.command = /^(black|blacklist|unblack)$/i
 izuku.tags = ['owner']
