@@ -16,10 +16,10 @@ let izuku = async (m, {
         let jid = nomor + '@s.whatsapp.net'
 
         // Inisialisasi chat jika belum ada
-        db.data.chats[jid] ||= {}
-        db.data.chats[jid].blacklist ||= []
+        db.data.chats[m.chat] ||= {}
+        db.data.chats[m.chat].blacklist ||= []
 
-        let chats = db.data.chats[jid]
+        let chats = db.data.chats[m.chat]
 
         if (chats.blacklist.includes(nomor)) {
             return m.reply('📌 Nomor sudah diblacklist.')
@@ -36,20 +36,20 @@ let izuku = async (m, {
 
         let jid = nomor + '@s.whatsapp.net'
 
-        if (!db.data.chats[jid] || !db.data.chats[jid].blacklist) {
+        if (!db.data.chats[m.chat] || !db.data.chats[m.chat].blacklist) {
             return m.reply('📌 Nomor tidak ada dalam blacklist.')
         }
 
-        let index = db.data.chats[jid].blacklist.indexOf(nomor)
+        let index = db.data.chats[m.chat].blacklist.indexOf(nomor)
         if (index === -1) return m.reply('📌 Nomor tidak ditemukan di blacklist.')
 
-        db.data.chats[jid].blacklist.splice(index, 1)
+        db.data.chats[m.chat].blacklist.splice(index, 1)
         m.reply(`✅ Nomor ${nomor} berhasil dihapus dari blacklist.`)
     } else if (command === 'blacklist') {
         let list = []
 
         for (let jid in db.data.chats) {
-            let chat = db.data.chats[jid]
+            let chat = db.data.chats[m.chat]
             if (chat.blacklist && chat.blacklist.length > 0) {
                 chat.blacklist.forEach(nomor => {
                     if (!list.includes(nomor)) list.push(nomor)
@@ -67,18 +67,6 @@ let izuku = async (m, {
 izuku.group = true;
 izuku.admin = true;
 izuku.botAdmin = true;
-
-izuku.before = async (m, {
-    conn
-}) => {
-    if (!m.isGroup) return;
-    let nomor = m.sender.split('@')[0]
-    if (db.data.chats[m.sender]?.blacklist?.includes(nomor)) {
-        return sock.sendMessage(m.chat, {
-            delete: m.key
-        });
-    }
-}
 
 izuku.help = ['black', 'blacklist', 'unblack']
 izuku.command = /^(black|blacklist|unblack)$/i
