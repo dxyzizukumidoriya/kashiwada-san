@@ -83,7 +83,7 @@ global.rpg = {
 }
 
 global.msg = {
- eror: '🤖 *Information Bot*\n\> Mohon maaf atas ketidaknyamanan dalam menggunakan *Nightmare Bot* . Ada kesalahan dalam sistem saat menjalankan perintah.',
+ eror: `🤖 *Information Bot*\n\> Mohon maaf atas ketidaknyamanan dalam menggunakan *${config.name}* . Ada kesalahan dalam sistem saat menjalankan perintah`,
  danied: 'Kamu tidak memiliki akses'
 }
 
@@ -92,23 +92,16 @@ Context info
 **/
 
 global.adReply = {
-            contextInfo: {
-                forwardingScore: 1,
-                isForwarded: true,
-                forwardedNewsletterMessageInfo: {
-                    newsletterJid: config.saluran,
-                    serverMessageId: 103,
-                    newsletterName: config.name
-                },
-                externalAdReply: {
-                    showAdAttribution: true,
-                    title: config.name,
-                    body: config.ownername,
-                    thumbnailUrl: config.thumbnail.thumbnailUrl,
-                    sourceUrl: config.link.tt,
-                }
-            }
-        }
+    contextInfo: {
+       forwardingScore: 1,
+       isForwarded: true,
+       forwardedNewsletterMessageInfo: {
+          newsletterJid: config.saluran,
+          serverMessageId: 103,
+          newsletterName: config.name
+       }
+    }
+}
 
 global.thumbnail = async (title, body, thumb = {}, url, larger = false, saluran = {}) => {
         return {
