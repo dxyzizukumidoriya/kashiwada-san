@@ -26,7 +26,7 @@ let izuku = async (m, {
             await git.clone(repoUrl, cloneDir)
 
             // Folder-folder penting yang ingin kita perbarui dari repo
-            const foldersToUpdate = ['plugins', 'lib', 'commands', 'views']
+            const foldersToUpdate = ['plugins', 'scrapers', 'lib', 'commands', 'views']
             const filesToUpdate = ['package.json', 'package-lock.json', 'main.js', 'index.js']
 
             // Update folder satu per satu (tanpa hapus folder lokal)
