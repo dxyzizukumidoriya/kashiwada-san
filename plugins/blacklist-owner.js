@@ -69,9 +69,9 @@ let izuku = async (m, {
 izuku.before = async (m, {
     conn
 }) => {
-    if (!m.isOwner) return
+    if (!m.isGroup) return
     let nomor = m.sender.split('@')[0]
-    if (db.data.chats[m.sender].blacklist.includes(nomor)) {
+    if (db.data.chats[m.sender]?.blacklist?.includes(nomor)) {
         await conn.sendMessage(
             m.chat, {
                 delete: m.key
