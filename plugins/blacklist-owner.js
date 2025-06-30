@@ -2,61 +2,60 @@
 // 👿 Creator: Dxyz  
 // ⚡ Plugin: blacklist-owner.js  
 
-let izuku = async (m, { args, command }) => {  
-    if (command === 'black') {  
-        let nomor = m.quoted ? m.quoted.sender : args[0];  
-        if (!nomor) return m.reply('🚫 Tag, reply, atau ketik nomor.');  
+let izuku = async (m, { args, command }) => {
+    if (command === 'black') {
+        let nomor = m.quoted ? m.quoted.sender : args[0];
+        if (!nomor) return m.reply('🚫 Tag, reply, atau ketik nomor.');
+        nomor = nomor.replace(/\D/g, '');
+        if (!nomor) return m.reply('🚫 Nomor tidak valid.');
+        
+        // Pastikan struktur database ada
+        if (!db.data.chats[m.chat]) db.data.chats[m.chat] = {};
+        if (!db.data.chats[m.chat].blacklist) db.data.chats[m.chat].blacklist = [];
+        
+        if (db.data.chats[m.chat].blacklist.includes(nomor)) {
+            return m.reply('📌 Nomor sudah diblacklist.');
+        }
+        
+        db.data.chats[m.chat].blacklist.push(nomor);
+        m.reply(`✅ Nomor ${nomor} berhasil diblacklist.`);
 
-        nomor = nomor.replace(/\D/g, '');  
-        if (!nomor) return m.reply('🚫 Nomor tidak valid.');  
+    } else if (command === 'unblack') {
+        let nomor = m.quoted ? m.quoted.sender : args[0];
+        if (!nomor) return m.reply('🚫 Tag, reply, atau ketik nomor.');
+        nomor = nomor.replace(/\D/g, '');
+        if (!nomor) return m.reply('🚫 Nomor tidak valid.');
 
-        let jid = nomor + '@s.whatsapp.net';  
+        // Pastikan database dan blacklist-nya ada
+        if (!db.data.chats[m.chat] || !db.data.chats[m.chat].blacklist) {
+            return m.reply('❌ Tidak ada blacklist di grup ini!');
+        }
 
-        // Inisialisasi database jika belum ada  
-        if (!db.data.chats[m.chat]) db.data.chats[m.chat] = {};  
-        if (!db.data.chats[m.chat].blacklist) db.data.chats[m.chat].blacklist = [];  
+        // Cari nomor di blacklist
+        let index = db.data.chats[m.chat].blacklist.indexOf(nomor);
+        if (index === -1) {
+            return m.reply('❌ Nomor tidak ditemukan di blacklist!');
+        }
 
-        if (db.data.chats[m.chat].blacklist.includes(nomor)) {  
-            return m.reply('📌 Nomor sudah diblacklist.');  
-        }  
+        // Hapus nomor dari blacklist
+        db.data.chats[m.chat].blacklist.splice(index, 1);
+        m.reply(`✅ Nomor ${nomor} berhasil dihapus dari blacklist.`);
 
-        db.data.chats[m.chat].blacklist.push(nomor);  
-        m.reply(`✅ Nomor ${nomor} berhasil diblacklist.`);  
+    } else if (command === 'blacklist') {
+        if (!db.data.chats[m.chat]?.blacklist?.length) {
+            return m.reply('📌 Tidak ada nomor di blacklist grup ini.');
+        }
+        let list = db.data.chats[m.chat].blacklist.map((n, i) => `${i + 1}. wa.me/${n}`).join('\n');
+        m.reply(`📋 Daftar Blacklist:\n\n${list}`);
+    }
+};
 
-    } else if (command === 'unblack') {  
-        let nomor = m.quoted ? m.quoted.sender : args[0];  
-        if (!nomor) return m.reply('🚫 Tag, reply, atau ketik nomor.');  
+izuku.group = true;
+izuku.admin = true;
+izuku.botAdmin = true;
 
-        nomor = nomor.replace(/\D/g, '');  
-        if (!nomor) return m.reply('🚫 Nomor tidak valid.');  
+izuku.help = ['black', 'unblack', 'blacklist'];
+izuku.command = /^(black|unblack|blacklist)$/i;
+izuku.tags = ['owner'];
 
-        if (!db.data.chats[m.chat] || !db.data.chats[m.chat].blacklist) {  
-            return m.reply('📌 Tidak ada blacklist di grup ini.');  
-        }  
-
-        let index = db.data.chats[m.chat].blacklist.indexOf(nomor);  
-        if (index === -1) return m.reply('📌 Nomor tidak ditemukan di blacklist.');  
-
-        db.data.chats[m.chat].blacklist.splice(index, 1);  
-        m.reply(`✅ Nomor ${nomor} berhasil dihapus dari blacklist.`);  
-
-    } else if (command === 'blacklist') {  
-        if (!db.data.chats[m.chat] || !db.data.chats[m.chat].blacklist || db.data.chats[m.chat].blacklist.length === 0) {  
-            return m.reply('✅ Tidak ada nomor yang diblacklist di grup ini.');  
-        }  
-
-        let list = db.data.chats[m.chat].blacklist;  
-        let teks = list.map((n, i) => `${i + 1}. wa.me/${n}`).join('\n');  
-        m.reply(`📋 Daftar blacklist grup ini:\n\n${teks}`);  
-    }  
-};  
-
-izuku.group = true;  
-izuku.admin = true;  
-izuku.botAdmin = true;  
-
-izuku.help = ['black', 'blacklist', 'unblack'];  
-izuku.command = /^(black|blacklist|unblack)$/i;  
-izuku.tags = ['owner'];  
-
-module.exports = izuku;  
+module.exports = izuku;
