@@ -27,7 +27,7 @@ let handler = async (m, {
             const thumb = await thumbnail(result.title, config.name, {
                 thumbnailUrl: result.thumbnail
             }, result.url, true);
-            const youtubeInfo = `╭───「 🎬 𝗬𝗢𝗨𝗧𝗨𝗕𝗘 𝗗𝗢𝗪𝗡𝗟𝗢𝗔𝗗 𝗜𝗡𝗙𝗢 」───
+            const youtubeInfo = `╭───「 🔍 *Search Lagu Play* 」───
 │
 │  📌 *Title*: ${result.title || 'No title'}
 │  🆔 *Video ID*: ${result.videoId || 'N/A'}
