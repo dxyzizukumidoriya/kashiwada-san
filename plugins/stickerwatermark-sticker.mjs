@@ -33,7 +33,7 @@ let izuku = async (m, {
     });
 
     const buffer = await sticker.toBuffer();
-    await sticker.toFile('./tmp/sticker.webp');
+    await sticker.toFile('./sticker.webp');
 
     conn.sendMessage(m.chat, await sticker.toMessage(), {
         quoted: m,
