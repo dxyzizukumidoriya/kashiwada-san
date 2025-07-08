@@ -40,7 +40,7 @@ let izuku = async (m, {
         ephemeralExpiration: 86400
     });
 
-    await fs.unlinkSync('./tmp/sticker.webp');
+    await fs.unlinkSync('./sticker.webp');
 };
 
 izuku.loading = true;
