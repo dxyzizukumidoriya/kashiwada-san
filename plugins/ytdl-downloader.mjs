@@ -56,20 +56,13 @@ let izuku = async (m, {
                     responseType: 'arraybuffer'
                 });
                 const jpegThumbnail = await getThumbnailFromBuffer(buffer.data);
-                let buff;
-                try {
-                    const og = await Scraper.ogmp3.download(result.url, '128', 'audio');
-                    buff = await axios.get(og.result.download, {
-                        responseType: 'arraybuffer'
-                    });
-                } catch (e) {
-                    try {
-                        const savet = await Scraper.savetube(result.url, '128')
-                        buff = await axios.get(savet.download, {
-                            responseType: 'arraybuffer'
-                        });
-                    } catch (e) {}
-                };
+
+                let {
+                    result: ytDx
+                } = await axios.get(`https://izumi-apis.zone.id/downloader/youtube2dl?url=${result.url}&format=mp3`).then(a => a.data)
+                let buff = await axios.get(ytDx.download, {
+                    responseType: 'arraybuffer'
+                });
                 const audioRes = Buffer.from(buff.data, 'binary')
 
                 if (audioRes.length > 100 * 1024 * 1024) {
@@ -155,20 +148,13 @@ let izuku = async (m, {
                     responseType: 'arraybuffer'
                 });
                 const jpegThumbnail = await getThumbnailFromBuffer(buffer.data);
-                let buff;
-                try {
-                    const og = await Scraper.ogmp3.download(result.url, quality, 'video');
-                    buff = await axios.get(og.result.download, {
-                        responseType: 'arraybuffer'
-                    });
-                } catch (e) {
-                    try {
-                        const savet = await Scraper.savetube(result.url, quality)
-                        buff = await axios.get(savet.download, {
-                            responseType: 'arraybuffer'
-                        });
-                    } catch (e) {}
-                };
+
+                let {
+                    result: ytDx
+                } = await axios.get(`https://izumi-apis.zone.id/downloader/youtube2dl?url=${result.url}&format=${quality}`).then(a => a.data)
+                let buff = await axios.get(ytDx.download, {
+                    responseType: 'arraybuffer'
+                });
                 const videoRes = Buffer.from(buff.data, 'binary')
 
                 if (videoRes.length > 40 * 1024 * 1024) {
