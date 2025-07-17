@@ -105,6 +105,7 @@ module.exports = {
                     if (!('resetlimit' in settings)) settings.resetlimit = moment.tz(config.tz).format("HH:mm")
                     if (!('autoread' in settings)) settings.autoread = false
                     if (!('restrict' in settings)) settings.restrict = true
+                    if (!('onlygrup' in settings)) settings.onlygrup = true
                     if (!('autorestart' in settings)) settings.autorestart = true
                     if (!('restartDB' in settings)) settings.restartDB = 0
                     if (!isNumber(settings.status)) settings.status = 0
@@ -117,6 +118,7 @@ module.exports = {
                     autoread: false,
                     resetlimit: moment.tz(config.tz).format("HH:mm"),
                     restrict: true,
+                    onlygrup: true,
                     autorestart: true,
                     restartDB: 0,
                     status: 0,
@@ -289,6 +291,9 @@ module.exports = {
                     if ((usedPrefix = (match[0] || '')[0])) {
                         let noPrefix = m.text.replace(usedPrefix, '')
                         let [command, ...args] = noPrefix.trim().split` `.filter(v => v)
+                        if (!m.isGroup && db.data.settings[this.user.jid].onlygrup) {
+                           if (usedPrefix && command) return m.reply(`Sorry Bre Ini Only Gc Link Gc:\n\n${config.wagc.map((a, i) => `${i + 1 + ','} ${a}`).join(`\n`)}`)
+                        };
                         args = args || []
                         let _args = noPrefix.trim().split` `.slice(1)
                         let text = _args.join` `
