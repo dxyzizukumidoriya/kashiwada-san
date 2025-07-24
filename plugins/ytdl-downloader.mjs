@@ -59,7 +59,7 @@ let izuku = async (m, {
 
                 let {
                     result: ytDx
-                } = await axios.get(`https://izumi-apis.zone.id/downloader/youtube2dl?url=${result.url}&format=mp3`).then(a => a.data)
+                } = await axios.get(`https://izumi-apis.zone.id/downloader/youtube?url=${result.url}&format=mp3`).then(a => a.data)
                 let buff = await axios.get(ytDx.download, {
                     responseType: 'arraybuffer'
                 });
@@ -151,7 +151,7 @@ let izuku = async (m, {
 
                 let {
                     result: ytDx
-                } = await axios.get(`https://izumi-apis.zone.id/downloader/youtube2dl?url=${result.url}&format=${quality}`).then(a => a.data)
+                } = await axios.get(`https://izumi-apis.zone.id/downloader/youtube?url=${result.url}&format=${quality}`).then(a => a.data)
                 let buff = await axios.get(ytDx.download, {
                     responseType: 'arraybuffer'
                 });
