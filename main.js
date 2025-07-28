@@ -145,7 +145,7 @@
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⣺⣿⠫⠈⠀⠀⠀⠀⠀⠀⠀⠀⠻⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠩⠉⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠢⡾⡿⡟⠌⠀⠀⠀⠀⠀⠀⠀⠀⠀⠨⠻⠻⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀`, 'blue'))
-    
+  
     const connectionOptions = {
         printQRInTerminal: false,
         syncFullHistory: true,
@@ -176,7 +176,7 @@
 
             return message;
         },
-        version: [2, 3000, 1023223821],
+        version,
         browser: Browsers.ubuntu('Chrome'),
         logger: pino({
             level: 'fatal'
