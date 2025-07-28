@@ -25,6 +25,8 @@ global.config = {
     isQr: false,
     prefix: [".", "?", "!", "/", "#"], //Tambahin sendiri prefix nya kalo kurang
     wagc: [ "https://chat.whatsapp.com/JyeT1hdCPJeLy95tzx5eyI", "https://chat.whatsapp.com/DfffgArbTUu46nqCgmCbE0" ],
+    apikey: 'https://izumi-apis.aetherrr.biz.id',
+    web: 'https://izumi-apis.aetherrr.biz.id/',
     saluran: '120363401113812327@newsletter', 
     jid: '120363267102694949@g.us', 
     wach: 'https://whatsapp.com/channel/0029VadFS3r89inc7Jjus03W', 
@@ -87,20 +89,24 @@ global.msg = {
  danied: 'Kamu tidak memiliki akses'
 }
 
-/**
-Context info
-**/
-
 global.adReply = {
-    contextInfo: {
-       forwardingScore: 1,
-       isForwarded: true,
-       forwardedNewsletterMessageInfo: {
-          newsletterJid: config.saluran,
-          serverMessageId: 103,
-          newsletterName: config.name
-       }
-    }
+   contextInfo: {
+      forwardingScore: 1,
+      isForwarded: true,
+      forwardedNewsletterMessageInfo: {
+         newsletterJid: config.saluran,
+         serverMessageId: 103,
+         newsletterName: config.name
+      },
+      externalAdReply: {
+         title: config.name,
+         body: config.ownername,
+         mediaType: 1,
+         ...config.thumbnail,
+         sourceUrl: config.web,
+         renderLargerThumbnail: false
+      }
+   }
 }
 
 global.thumbnail = async (title, body, thumb = {}, url, larger = false, saluran = {}) => {
