@@ -21,7 +21,7 @@ let izuku = async (m, {
 
         const response = await axios({
             method: 'get',
-            url: 'https://izumi-apis.zone.id/tools/removebg',
+            url: `${config.apikey}/tools/removebg`,
             params: {
                 imageUrl: urlview
             }
