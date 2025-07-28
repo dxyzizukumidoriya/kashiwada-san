@@ -3,7 +3,6 @@
 // ⚡ Plugin: spotify-downloader.mjs
 
 import axios from 'axios';
-let api = 'https://izumi-apis.zone.id';
 
 let handler = async (m, {
     conn,
@@ -21,7 +20,7 @@ let handler = async (m, {
     return new Promise(async (revolse) => {
         if (/open\.spotify\.com/.test(text)) {
             if (!/open\.spotify\.com/.test(text)) return m.reply("⚠️ Link bukan dari Spotify!");
-            await axios.get(`${api}/downloader/spotifydl?url=${text}`).then(async (a) => {
+            await axios.get(`${config.apikey}/downloader/spotifydl?url=${text}`).then(async (a) => {
                 const x = a.data.result
                 const caption = `
 ╭───────────────────────────────╮
@@ -61,7 +60,7 @@ let handler = async (m, {
                 console.log('msg:', err);
             });
         } else {
-            await axios.get(`${api}/search/spotifysrc?q=${text}`).then(async (a) => {
+            await axios.get(`${config.apikey}/search/spotifysrc?q=${text}`).then(async (a) => {
                 const x = a.data.result
                 const listMessage = {
                     title: 'Pilih Lagu',
