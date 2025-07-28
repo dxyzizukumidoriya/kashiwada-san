@@ -19,7 +19,7 @@ let izumi = async (m, {
         }
     });
     try {
-        const response = await (await fetch(`https://izumi-apis.zone.id/search/zerochan?query=${encodeURIComponent(text)}`)).json()
+        const response = await (await fetch(`${config.apikey}/search/zerochan?query=${encodeURIComponent(text)}`)).json()
         if (!response.result.length > 0) return m.reply('> ❌ Maaf Foto Nya Gada Yah :v');
         let caption = ` *-* 🔍 [ Search Zerochan ] 🔍 *-*
 > 📩 Request: @${m.sender.split('@')[0]}
