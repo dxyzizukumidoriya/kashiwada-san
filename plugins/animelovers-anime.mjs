@@ -13,7 +13,7 @@ let izuku = async (m, {
         case 'animeloversrc': {
             if (!text) throw ' *[ ! ]* Masukan Judul Nya !';
             try {
-                await axios.get(`https://izumi-apis.zone.id/anime/AnimeLoversV3-Search?q=${text}`).then(async (a) => {
+                await axios.get(`${config.apikey}/anime/AnimeLoversV3-Search?q=${text}`).then(async (a) => {
                     if (!a.data.result.result.length > 0) return m.reply(' *[ ! ]* Maaf Gada Result !');
                     let caption = ` *π* Jumlah Anime: ${a.data.result.result.length}\n\n`;
                     caption += a.data.result.result.map((a, i) => `*[ ${i + 1} ]*\n -> Judul: ${a.judul || ''}\n -> Url: ${a.url || ''}\n -> Lastch: ${a.lastch || ''}`).join("\n\n");
@@ -39,7 +39,7 @@ let izuku = async (m, {
             if (!text) throw ' *[ ! ]* Masukan Url Nya !';
 
             try {
-                await axios.get(`https://izumi-apis.zone.id/anime/AnimeLoversV3-Detail?url=${text}`).then(async (a) => {
+                await axios.get(`${config.apikey}/anime/AnimeLoversV3-Detail?url=${text}`).then(async (a) => {
                     if (!a.data.result) return m.reply(' *[ ! ]* Maaf Gada Result !');
                     let caption = ` *π* Detail AnimeLoversV3
  -> Judul: ${a.data.result.judul || ''}
@@ -74,7 +74,7 @@ ${a.data.result.chapter.map((a, i) => ` -> Episode: ${a.ch || ''}\n╰┈┈┈�
             if (!text) throw ' *[ ! ]* Masukan Url Nya !';
 
             try {
-                await axios.get(`https://izumi-apis.zone.id/anime/AnimeLoversV3-Episode?url=${text}&quality=360p`).then(async (a) => {
+                await axios.get(`${config.apikey}/anime/AnimeLoversV3-Episode?url=${text}&quality=360p`).then(async (a) => {
                     const dl = (a.data.result.stream[1] || a.data.result.stream[0]).link;
                     const watch = await axios.get(dl, {
                         responseType: 'arraybuffer'
