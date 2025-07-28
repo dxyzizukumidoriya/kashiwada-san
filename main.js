@@ -145,7 +145,7 @@
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⣺⣿⠫⠈⠀⠀⠀⠀⠀⠀⠀⠀⠻⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠩⠉⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠢⡾⡿⡟⠌⠀⠀⠀⠀⠀⠀⠀⠀⠀⠨⠻⠻⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀`, 'blue'))
-    const vers = await (await fetch('https://raw.githubusercontent.com/WhiskeySockets/Baileys/master/src/Defaults/baileys-version.json')).json()
+    
     const connectionOptions = {
         printQRInTerminal: false,
         syncFullHistory: true,
@@ -176,7 +176,7 @@
 
             return message;
         },
-        version: vers.version,
+        version: [2, 3000, 1023223821],
         browser: Browsers.ubuntu('Chrome'),
         logger: pino({
             level: 'fatal'
