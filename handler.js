@@ -137,10 +137,37 @@ module.exports = {
             if (opts['gconly'] && !m.chat.endsWith('g.us')) return
             if (opts['swonly'] && m.chat !== 'status@broadcast') return
             if (typeof m.text !== 'string') m.text = ''
-            const isROwner = [...config.owner.map((a) => a + "@s.whatsapp.net")].includes(m.sender);
-            const isOwner = isROwner
+
+            let usedPrefix
+            let _user = global.db.data && global.db.data.users && global.db.data.users[m.sender]
+            
+            const detectwhat = m.sender.includes('@lid') ? '@lid' : '@s.whatsapp.net';
+            const ownerNumbers = global.config.owner.map(v => v.replace(/[^0-9]/g, '')); 
+            const mappedOwners = ownerNumbers.map(v => v + detectwhat); 
+            console.log('DEBUG: mappedOwners (JID format for comparison):', mappedOwners);
+            const isROwner = mappedOwners.includes(m.sender);
+            const isOwner = isROwner || m.fromMe
             const isPrems = global.db.data.users[m.sender].premium
             const isBans = global.db.data.users[m.sender].banned
+            
+            async function getLidFromJid(id, conn) {
+                if (id.endsWith('@lid')) return id
+                const res = await conn.onWhatsApp(id).catch(() => [])
+                return res[0]?.lid || id
+            }   
+            global.getLidFromJid = getLidFromJid;
+            const senderLid = await getLidFromJid(m.sender, this)
+            const botLid = await getLidFromJid(this.user.jid, this)
+            const senderJid = m.sender
+            const botJid = this.user.jid
+            const groupMetadata = (m.isGroup ? (conn.chats[m.chat] || {}).metadata : {}) || {}
+            const participants = m.isGroup ? (groupMetadata.participants || []) : []
+            const user = participants.find(p => p.id === senderLid || p.id === senderJid) || {}
+            const bot = participants.find(p => p.id === botLid || p.id === botJid) || {}
+            const isRAdmin = user?.admin === "superadmin" || false
+            const isAdmin = isRAdmin || user?.admin === "admin" || false
+            const isBotAdmin = !!bot?.admin || false
+
             if (!isOwner && db.data.settings[this.user.jid].self) return
             if (!isOwner && db.data.chats[m.chat].mute) return
             const isBot = m?.id?.startsWith("3EB0") ||
@@ -210,17 +237,6 @@ module.exports = {
             }
 
             m.exp += Math.ceil(Math.random() * 10)
-
-            let usedPrefix
-            let _user = global.db.data && global.db.data.users && global.db.data.users[m.sender]
-
-            const groupMetadata = (m.isGroup ? (conn.chats[m.chat] || {}).metadata : {}) || {}
-            const participants = (m.isGroup ? groupMetadata.participants : []) || []
-            const user = (m.isGroup ? participants.find(u => conn.decodeJid(u.id) === m.sender) : {}) || {} // User Data
-            const bot = (m.isGroup ? participants.find(u => conn.decodeJid(u.id) == this.user.jid) : {}) || {} // Your Data
-            const isRAdmin = user && user.admin == 'superadmin' || false
-            const isAdmin = isRAdmin || user && user.admin == 'admin' || false // Is User Admin?
-            const isBotAdmin = bot && bot.admin || false // Are you Admin?
 
             for (let name in pg.plugins) {
                 let plugins
