@@ -11,7 +11,7 @@ let izuku = async (m, {
     if (!text) throw ' *[ ! ]* Masukan Teks Nya !'
     return new Promise(async (revolse, reject) => {
         await axios.get(
-            'https://api.nekorinn.my.id/maker/brat-v2', {
+            'https://brat.siputzx.my.id/image', {
                 params: {
                     text: text
                 },
