@@ -39,13 +39,16 @@ let handler = async (m, {
 │  👁️ ${result.metadata.view || '0'} views
 │  💙 ${result.metadata.like || '0'} likes
 │  💬 ${result.metadata.comment || '0'} comments
-│
+╰───────────────────────
+╭───「 ☘️ *Mau Pilih Type Apa*」───
+│ 🎥 Video: 1
+│ 🎧 Audio: 2
 ╰───────────────────────`;
 
             const buf = await axios.get('https://files.catbox.moe/bd40za.jpg', {
                 responseType: 'arraybuffer'
             });
-            await conn.sendClearTime(
+            await conn.sendAliasMessage(
                 m.chat, {
                     document: {
                         url: result.url
@@ -56,26 +59,14 @@ let handler = async (m, {
                     pageCount: 10,
                     jpegThumbnail: buf.data,
                     caption: youtubeInfo,
-                    buttons: [{
-                            buttonId: '.ytmp3 ' + result.url,
-                            buttonText: {
-                                displayText: 'Audio'
-                            },
-                            type: 1
-                        },
-                        {
-                            buttonId: '.ytmp4 ' + result.url,
-                            buttonText: {
-                                displayText: 'Video'
-                            },
-                            type: 1
-                        }
-                    ],
-                    footer: 'Fitur Play By: ' + config.name,
                     ...thumb
+                }, [{
+                    alias: '1',
+                    response: `${usedPrefix}ytmp4 ${result.url}`
                 }, {
-                    quoted: m
-                })
+                    alias: '2',
+                    response: `${usedPrefix}ytmp3 ${result.url}`
+                }], m)
 
         }).catch(async (err) => {
             await conn.sendMessage(
