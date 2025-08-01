@@ -2,6 +2,9 @@
 // 👿 Creator: dxyz
 // ⚡ Plugin: menu.js
 
+const more = String.fromCharCode(8206)
+const readmore = more.repeat(4001)
+
 let rin = {
     help: [],
     command: ["menu", "rinmenu"],
@@ -55,9 +58,9 @@ let rin = {
                         .map((helpItem, index) => `│ *( ${index + 1} )* ${usedPrefix + helpItem}`)
                         .join("\n");
 
-                    return `╭───────────[ ${tag.toUpperCase()} ]──────────╮
-${helpList}
-╰──────────────────────────────────╯`;
+                    return `╭─[ ${tag.toUpperCase()} ]─╮  
+${helpList}  
+╰─────────────────────────╯`;
                 })
                 .join("\n\n");
         }
@@ -84,23 +87,31 @@ ${helpList}
         };
 
         // Main menu design
-        const demonSlayerHeader = `*Hi there* I'm *${config.name}* Here the features are few/many because the owner is not yet old, Sometimes my hobby is watching anime, watching illegal streaming anime`;
-        const teksdx = `If there is an error, please contact the owner at the number: ${config.owner.map((ownum => 'https://wa.me/' + ownum)).join(', ')}`;
+        const demonSlayerHeader = `*Hello there 👋*  
+I'm *${config.name}*, a WhatsApp bot created by *${config.owner.name}*.
+
+This bot can be used for *educational purposes*, *media downloads*, *games*, *group moderation*, and *many other features* that help make your daily activities easier.  
+And I like watching anime even though streaming is illegal
+
+➤ *Main Menu:* \`.menu all\`  
+➤ *Feature List:* \`.menu list\`  
+➤ *Contact Creator:* \`.owner\``;
+        const teksdx = `_*Thank you for using ${botInfo.name}!*_`;
 
         const botInfoSection = `
-╭───────────[ 🤖 BOT INFO ]──────────╮
-│ 🏷️ Name: ${botInfo.name}          
-│ 📞 Number: ${botInfo.number}          
-╰──────────────────────────────────╯
+╭─[ 🤖 BOT INFO ]─╮  
+│ 🏷️ Name: ${botInfo.name}  
+│ 📞 Number: ${botInfo.number}  
+╰─────────────────╯${readmore}
 `;
 
         const userInfoSection = `
-╭───────────[ 👤 USER INFO ]─────────╮
-│ 🏷️ Name: ${user.name}                     
-│ 📞 Number: ${user.number}          
-│ 🎚️ Limit: ${user.limit}                 
-│ 🏅 Status: ${user.status}         
-╰──────────────────────────────────╯
+╭─[ 👤 USER INFO ]─╮  
+│ 🏷️ Name: ${user.name}  
+│ 📞 Number: ${user.number}  
+│ 🎚️ Limit: ${user.limit}  
+│ 🏅 Status: ${user.status}  
+╰──────────────────╯
 `;
 
         if (text === "all") {
@@ -108,9 +119,9 @@ ${helpList}
             const allCommands = getPluginsByTags();
 
             const commandsSection = `
-╭───────────[ 📜 COMMANDS ]──────────╮
-${allCommands}
-╰──────────────────────────────────╯
+╭─[ 📜 COMMANDS ]─╮  
+${allCommands}  
+╰────────────────╯
 `;
 
             const caption = `${demonSlayerHeader}
@@ -128,23 +139,25 @@ ${teksdx}`;
                 fileName: config.ownername + ' / ' + config.name,
                 fileLength: 10,
                 pageCount: 10,
-                caption: Styles(caption),
-                footer: `© ${config.name}`,
                 contextInfo: {
                     mentionedJid: [...conn.parseMention(caption)],
                     isForwarded: true,
                     externalAdReply: {
                         mediaType: 1,
-                        title: "© " + config.name + " | Demon Mode",
-                        body: config.owner + ' / ' + config.name,
+                        title: "© " + config.name + " | Playground",
+                        body: "👨‍💻 Bot WhatsApp - Simple",
                         ...config.menu,
                         sourceUrl: config.link.tt,
                         renderLargerThumbnail: true,
                     },
+                    forwardedNewsletterMessageInfo: {
+                        newsletterJid: config.saluran,
+                        serverMessageId: 103,
+                        newsletterName: config.name
+                    },
                 },
-            }, {
-                quoted: m
-            });
+                caption: Styles(caption),
+            }, { quoted: m });
         } else if (text === "list") {
             const allTags = [];
             Object.keys(pg.plugins).forEach(pluginName => {
@@ -199,6 +212,11 @@ ${teksdx}`;
                         sourceUrl: config.link.tt,
                         renderLargerThumbnail: true,
                     },
+                    forwardedNewsletterMessageInfo: {
+                        newsletterJid: config.saluran,
+                        serverMessageId: 103,
+                        newsletterName: config.name
+                    },
                 },
                 caption: Styles(caption),
             }, { quoted: m });
@@ -208,9 +226,9 @@ ${teksdx}`;
             const filteredCommands = getPluginsByTags(tags);
 
             const commandsSection = `
-╭───────[ 📜 ${tags.join(', ').toUpperCase()} COMMANDS ]───────╮
-${filteredCommands}
-╰─────────────────────────────╯
+╭─[ 📜 ${tags.join(', ').toUpperCase()} ]─╮  
+${filteredCommands}  
+╰────────────────────────╯
 `;
 
             const caption = `${demonSlayerHeader}
@@ -281,6 +299,11 @@ ${teksdx}`;
                         ...config.menu,
                         sourceUrl: config.link.tt,
                         renderLargerThumbnail: true,
+                    },
+                    forwardedNewsletterMessageInfo: {
+                        newsletterJid: config.saluran,
+                        serverMessageId: 103,
+                        newsletterName: config.name
                     },
                 },
                 caption: Styles(caption),
