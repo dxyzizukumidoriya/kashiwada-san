@@ -27,43 +27,11 @@ let izuku = async (m, {
             await fs.writeFileSync(filename, buffer);
             const catbx = await catbox(buffer, filename);
             const cdup = await up.uploadPermanent(buffer, filename);
-            let caption = ` *•* Size: ${cdup.data.size || ''}\n *•* CatBox: ${catbx || ''}\n *•* Cloudkuimage: ${cdup.data.url || ''}`
+            let caption = `> 📂 -[ Uploader File ]-\n> 🗄️ *Size: ${cdup.data.size || ''}*\n> 🐱 *CatBox: ${catbx || ''}*\n> ☁️ *Cloudkuimage: ${cdup.data.url || ''}*`
             await fs.unlinkSync(filename)
             await conn.sendMessage(
                 m.chat, {
-                    text: ` ! *Uploader-Media* !`,
-                    footer: caption,
-                    interactiveButtons: [{
-                            name: 'cta_url',
-                            buttonParamsJson: JSON.stringify({
-                                display_text: '🌐Website Catbox',
-                                url: 'https://catbox.moe',
-                                merchant_url: 'https://catbox.moe'
-                            })
-                        },
-                        {
-                            name: 'cta_url',
-                            buttonParamsJson: JSON.stringify({
-                                display_text: '🌐Website Cloudkuimage',
-                                url: 'https://cloudkuimages.guru',
-                                merchant_url: 'https://catbox.moe'
-                            })
-                        },
-                        {
-                            name: 'cta_copy',
-                            buttonParamsJson: JSON.stringify({
-                                display_text: '📋 Salin Tourl',
-                                copy_code: catbx
-                            })
-                        },
-                        {
-                            name: 'cta_copy',
-                            buttonParamsJson: JSON.stringify({
-                                display_text: '📋 Salin Tourl2',
-                                copy_code: cdup.data.url
-                            })
-                        }
-                    ]
+                    text: caption
                 }, {
                     quoted: m
                 })
