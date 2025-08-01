@@ -13,8 +13,14 @@
     "update": "npm update"
   },
   "keywords": [
-    "rin-md",
-    "baileys-md"
+    "Tixo",
+    "( Izumi-Ganz ) Putra",
+    "( Nd ) Andhika",
+    "( Shima ) Fahri",
+    "( Nekorin ) Randy",
+    "Nazir",
+    "Rama",
+    "baileys"
   ],
   "homepage": "https://github.com/dxyzizukumidoriya/rin-base-v2",
   "author": "Dxyz",
@@ -27,7 +33,7 @@
   },
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "@adiwajshing/baileys": "npm:@itsukichan/baileys",
+    "@adiwajshing/baileys": "npm:baileys@latest",
     "@adiwajshing/keyed-db": "^0.2.4",
     "@google/genai": "^1.9.0",
     "@google/generative-ai": "^0.24.1",
@@ -56,7 +62,7 @@
     "fs-extra": "^10.0.0",
     "got": "^11.8.2",
     "human-readable": "^0.2.1",
-    "jimp": "^0.22.12",
+    "jimp": "^0.16.1",
     "js-beautify": "^1.15.4",
     "jsdom": "26.1.0",
     "lodash": "^4.17.21",
@@ -82,7 +88,7 @@
     "qrcode-terminal": "^0.12.0",
     "qs": "^6.10.1",
     "request": "^2.88.2",
-    "sharp": "^0.34.1",
+    "sharp": "^0.32.6",
     "simple-git": "3.28.0",
     "socket.io": "^4.4.1",
     "soundcloud-downloader": "^1.0.0",
