@@ -190,11 +190,6 @@
         },
     }
 
-    const getMessage = async key => {
-        const messageData = await store.loadMessage(key.remoteJid, key.id);
-        return messageData?.message || undefined;
-    }
-
     global.conn = simple.makeWASocket(connectionOptions)
     conn.isInit = false
 
@@ -222,12 +217,25 @@
         console.log(chalk.bgRed(chalk.white('!! WARNING !! : \ncreds.json rusak, silakan hapus dulu')))
         process.exit(0)
     }
+    
+    function makeid(length) {
+       let result = '';
+       let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+       let charactersLength = characters.length;
+       for (let i = 0; i < length; i++) {
+          result += characters.charAt(Math.floor(Math.random() * charactersLength));
+       }
+
+       return result;
+    }
+    
     if (!conn.authState.creds.registered) {
       console.log(chalk.bold.green('[ Warning ] ') + chalk.white('>>> ') + chalk.green(`Masukan Nomor Kalian Di Sini\nMinsalnya 62 Terus Contohnya: 628xxx`));
       const phoneNumber = await question(chalk.bold.green('[ Nomor Anda ] ') + chalk.white('>>> ') );
-      const code = await conn.requestPairingCode(phoneNumber, "RINN1234");
+      const code = makeid(8).toUpperCase()
+      const codePairing = await conn.requestPairingCode(phoneNumber, "RINN1234"/*code*/);
       setTimeout(() => {
-        console.log(chalk.bold.green('[ Code ] ') + chalk.white('>>> ') + chalk.green(`Nih Code Pairing Mu Tuan: ${chalk.bold.green(code)}`));
+        console.log(chalk.bold.green('[ Code ] ') + chalk.white('>>> ') + chalk.green(`Nih Code Pairing Mu Tuan: ${chalk.bold.green(codePairing)}`));
       }, 3000);
     }
     process.on('uncaughtException', console.error)
