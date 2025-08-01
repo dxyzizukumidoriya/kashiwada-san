@@ -11,7 +11,7 @@ let izuku = async (m, {
     let link = args[0];
     if (!/www.instagram.com/.test(link)) throw ' *[ ! ]* Maaf Lu Harus Masukan Link Instagram !';
     try {
-        const response = await (await fetch(`https://izumi-apis.zone.id/downloader/igdl?url=${link}`)).json();
+        const response = await (await fetch(`${config.apikey}/downloader/instagram?url=${link}`)).json();
         const ig = response.result;
         if (ig.metadata.isVideo === true) {
             await conn.sendMessage(
