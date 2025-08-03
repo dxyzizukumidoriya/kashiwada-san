@@ -91,7 +91,6 @@ ${helpList}
 I'm *${config.name}*, a WhatsApp bot created by *${config.ownername}*.
 
 This bot can be used for *educational purposes*, *media downloads*, *games*, *group moderation*, and *many other features* that help make your daily activities easier.  
-And I like watching anime even though streaming is illegal
 
 ➤ *Main Menu:* \`.menu all\`  
 ➤ *Feature List:* \`.menu list\`  
