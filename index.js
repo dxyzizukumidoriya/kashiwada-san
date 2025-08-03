@@ -4,6 +4,13 @@ const path = require('path');
 const fs = require('fs');
 const os = require('os');
 
+const [major] = process.versions.node.split('.').map(Number);
+
+if (major < 20) {
+  console.error('❌ Node.js versi 20 atau lebih tinggi diperlukan!, Nodejs Lawas Buang Aja😂');
+  process.exit(1); // keluar paksa
+}
+
 let isRunning = false;
 
 function start(file) {
