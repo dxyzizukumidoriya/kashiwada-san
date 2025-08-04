@@ -5,6 +5,7 @@ const {
 } = require('./lib/color')
 const moment = require("moment-timezone")
 const fetch = require("node-fetch")
+global.Func = require('./lib/function')
 
 const isNumber = x => typeof x === 'number' && !isNaN(x)
 const delay = ms => isNumber(ms) && new Promise(resolve => setTimeout(resolve, ms))
