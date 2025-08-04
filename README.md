@@ -56,8 +56,6 @@ global.config = {
       thumbnailUrl: geturl
       //thumbnail: fs.readFileSync('./image/tambahkan-ft-trus-kasih-nama')
     },
-    isQr: false,
-    prefix: [".", "?", "!", "/", "#"], //Tambahin sendiri prefix nya kalo kurang
     wagc: [ "https://chat.whatsapp.com/JyeT1hdCPJeLy95tzx5eyI", "https://chat.whatsapp.com/DfffgArbTUu46nqCgmCbE0" ],
     apikey: 'https://izumi-apis.aetherrr.biz.id',
     web: 'https://izumi-apis.aetherrr.biz.id/',
@@ -68,17 +66,9 @@ global.config = {
      tt: "https://www.tiktok.com/@leooxzy_ganz/"
     },
     sticker: {
-      packname: "〆 Rin-Kun",
-      author: "By: Deku/Dxyz 〆"
+      packname: "〆 Kashiwada-San",
+      author: "By: Dxyz 〆"
     },
-   messages: {
-      wait: "*( Loading )* Tunggu Sebentar...",
-      owner: "*( Denied )* Kamu bukan owner ku !",
-      premium: "*( Denied )* Fitur ini khusus user premium",
-      group: "*( Denied )* Fitur ini khusus group",
-      botAdmin: "*( Denied )* Lu siapa bukan Admin group",
-      grootbotbup: "*( Denied )* Jadiin Yuta-Botz admin dulu baru bisa akses",
-   },
    tz: "Asia/Jakarta"
 }
 
