@@ -19,7 +19,7 @@ export default {
     }) => {
         const tiktokRegex = /https?:\/\/(?:www\.|vm\.|vt\.)?tiktok\.com\/(?:@[\w.-]+\/video\/\d+|[\w.-]+\/video\/\d+|\w+|t\/\w+)/i;
         const hasTiktokLink = tiktokRegex.test(text) || null;
-        if (!hasTiktokLink) throw `Maaf Anda Masukkan Link Dulu Contoh ${m.prefix + m.command} https://vt.tiktok.com/xxxx`;
+        if (!hasTiktokLink) throw `Maaf Anda Masukkan Link Dulu Contoh ${usedPrefix + command} https://vt.tiktok.com/xxxx`;
 
         let url;
         if (hasTiktokLink) {
