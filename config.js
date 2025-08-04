@@ -6,7 +6,7 @@ global.ftpick = [
   "https://files.catbox.moe/118nmm.jpg",
   "https://files.catbox.moe/cwe31b.jpg"
 ]
-global.geturl = global.ftpick[Math.floor(Math.random() * global.ftpick.length)]
+global.geturl = 'https://files.cloudkuimages.guru/images/xjnU1ZY4.jpg' // global.ftpick[Math.floor(Math.random() * global.ftpick.length)]
 
 global.setting = {
   clear: false,
@@ -14,10 +14,10 @@ global.setting = {
 }
 
 global.config = {
-    owner: ["6283136099660"],
-    name: "Rin-Kun",
+    owner: ["6283136099660", "242588711973065@lid"],
+    name: "Kashiwada-san",
     ownername: 'Dxyz',
-    menu: { thumbnailUrl: 'https://files.catbox.moe/8h6ylu.jpg' }, //thumbnail: fs.readFileSync('./image/tambahkan-ft-trus-kasih-nama')
+    menu: { thumbnailUrl: 'https://files.cloudkuimages.guru/images/0vJcLfEA.jpg' }, //thumbnail: fs.readFileSync('./image/tambahkan-ft-trus-kasih-nama')
     thumbnail: {
       thumbnailUrl: geturl
       //thumbnail: fs.readFileSync('./image/tambahkan-ft-trus-kasih-nama')
