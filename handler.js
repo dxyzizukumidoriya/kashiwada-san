@@ -421,33 +421,20 @@ module.exports = {
                                             user.limit -= plugins.limit
                                             conn.reply(
                                                 m.chat,
-                                                `⚡━━━━━━━━━━━━━━━━━━━⚡
-👹 *LIMIT DEMONIC* 👹
-⚡━━━━━━━━━━━━━━━━━━━⚡
-
-🗡️ Limit kamu: ${user.limit} tersisa 
-⏳ Reset: 02:00 WIB
-"Jangan habiskan kekuatan iblismu!" - Rin
-⚡━━━━━━━━━━━━━━━━━━━⚡`,
+                                                `> 🍀 Kashiwada: Limit Mu Tinggal: ${user.limit}\n> 💢 Oota: LAIN KALI JANGAN BOROS\n> 🍀 Kashiwada: Oota-kun, Jangan Marah Marah lah lagian, cuman limit doang....`,
                                                 m
                                             )
                                             if (user.limit === plugins.limit) {
                                                 conn.reply(
                                                     m.chat,
-                                                    `💢━━━━ *FINAL WARNING* ━━━━💢
-👹 *Limit terakhir!* Hanya ${user.limit} tersisa!
-⏱️ Tunggu reset 02:00 WIB
-"Kau menguji kesabaranku!" - Rin`,
+                                                    `> 🍞 Oota-kun: Kan Limit Mu: ${user.limit},\n> 🍀 Kashiwada: Yaudahlah Limit Mu Dikit Nunggu Riset Jam: 2:00`,
                                                     m
                                                 )
                                             }
                                         } else {
                                             conn.reply(
                                                 m.chat,
-                                                `🔥━━━━ *LIMIT HABIS* ━━━━🔥
-⚔️ Tidak bisa menggunakan fitur!
-⏳ Reset otomatis 02:00 WIB
-"Pulang saja kau, manusia!" - Rin`,
+                                                `> 🍀 Kashiwada: Yaah Limit Mu Habis...\n> 💢 Oota: Mangka Nya Jangan Boros Sayang Tuh Limit`,
                                                 m
                                             )
                                         }
