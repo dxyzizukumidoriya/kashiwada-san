@@ -13,7 +13,9 @@ export default {
     limit: true,
     code: async (m, {
         conn,
-        text
+        text,
+        usedPrefix,
+        command
     }) => {
         const tiktokRegex = /https?:\/\/(?:www\.|vm\.|vt\.)?tiktok\.com\/(?:@[\w.-]+\/video\/\d+|[\w.-]+\/video\/\d+|\w+|t\/\w+)/i;
         const hasTiktokLink = tiktokRegex.test(text) || null;
