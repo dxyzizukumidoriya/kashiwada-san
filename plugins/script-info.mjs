@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const apiUrl = "https://api.github.com/repos/dxyzizukumidoriya/rin-base-v2"
+const apiUrl = "https://api.github.com/repos/dxyzizukumidoriya/kashiwada-san"
 
 let rin = async (m, { conn }) => {
     const {
@@ -69,3 +69,4 @@ rin.tags = ['info'];
 rin.command = /^(sc|script)$/i;
 
 export default rin;
+        
