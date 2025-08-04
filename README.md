@@ -1,21 +1,21 @@
 
 <p align="center">
-  <img src="https://files.catbox.moe/hubkvg.jpg" width="250"/>
+  <img src="https://files.catbox.moe/i6ni7d.jpg" width="250"/>
 </p>
 
-<h1 align="center">Rin Okumura - WhatsApp Bot</h1>
+<h1 align="center">Kashiwada-San - WhatsApp Bot</h1>
 
 
 ---
 
 ## 👤 Owner
 
-> GitHub: [LeooxzyDekuu](https://github.com/LeooxzyDekuu.png)  
-> Project: **Rin Okumura WhatsApp Bot V2**
+> GitHub: [dxyzizukumidoriya](https://github.com/dxyzizukumidoriya.png)  
+> Project: **Kashiwada-San WhatsApp Bot**
 
 ---
 
-> Bot WhatsApp modular yang kuat menggunakan JavaScript, dibuat dengan sistem plugin untuk fleksibilitas maksimal. Terinspirasi oleh **Rin Okumura** dari *Blue Exorcist*, bot ini menghadirkan semangat dan disiplin dalam obrolan Anda!
+> Bot WhatsApp modular yang kuat menggunakan JavaScript, dibuat dengan sistem plugin untuk fleksibilitas maksimal. Terinspirasi oleh **Kashiwada-san** dari *Kao ni Denai Kashiwada-san to Kao ni Deru Oota-kun*, bot ini menghadirkan semangat dan disiplin dalam obrolan Anda!
 
 ---
 
@@ -25,7 +25,7 @@
 - Ditulis dalam JavaScript
 - Kompatibel dengan CommonJS & ESModule
 - Pembuatan perintah yang mudah
-- Terinspirasi oleh karakter anime Rin Okumura
+- Terinspirasi oleh karakter anime kashiwada
 
 ---
 
@@ -303,11 +303,11 @@ export default handler;
 
 
 ## 👥 All Contributors
-[![Tiooxy](https://github.com/Tiooxy.png?size=100)](https://github.com/LeooxzyDekuu) | [![AxellNetwork](https://github.com/AxellNetwork.png?size=100)](https://github.com/AxellNetwork) | [![AndhikaGG](https://github.com/AndhikaGG.png?size=100)](https://github.com/AndhikaGG)  
+[![Tiooxy](https://github.com/Tiooxy.png?size=100)](https://github.com/Tiooxy) | [![AndhikaGG](https://github.com/AndhikaGG.png?size=100)](https://github.com/AndhikaGG)  
 ---|---|---  
-[Tiooxy](https://github.com/Tiooxy) | [AxellNetwork](https://github.com/AxellNetwork) | [AndhikaGG](https://github.com/AndhikaGG)  
-Base Original | Base Script | Penyumbang fitur
+[Tiooxy](https://github.com/Tiooxy) | [AndhikaGG](https://github.com/AndhikaGG)  
+Base Original | Penyumbang fitur
 
 ---
 
-> *"Api pengusir setan akan menuntun perintahmu. Jangan takut pada iblis, jadilah tuan."*
+> *"Hmmm...."*
