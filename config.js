@@ -74,11 +74,6 @@ global.rpg = {
   }
 }
 
-global.msg = {
- eror: `🤖 *Information Bot*\n\> Mohon maaf atas ketidaknyamanan dalam menggunakan *${config.name}* . Ada kesalahan dalam sistem saat menjalankan perintah`,
- danied: 'Kamu tidak memiliki akses'
-}
-
 global.adReply = {
    contextInfo: {
       forwardingScore: 1,
