@@ -38,9 +38,13 @@ module.exports = {
                 if (user) {
                     if (!('limit' in user)) user.limit = 100
                     if (!('exp' in user)) user.exp = 100
+                    if (!('afkReason' in user)) user.afk = -1
+                    if (!('afk' in user)) user.afkReason = ""
                 } else global.db.data.users[m.sender] = {
                     limit: 100,
-                    exp: 100
+                    exp: 100,
+                    afk: -1,
+                    afkReason: ""
                 }
 
                 let chat = global.db.data.chats[m.chat]
