@@ -148,7 +148,8 @@ module.exports = {
             let _user = global.db.data && global.db.data.users && global.db.data.users[m.sender]
             
             const detectwhat = m.sender.includes('@lid') ? '@lid' : '@s.whatsapp.net';
-            const ownerNumbers = global.config.owner.map(v => v.replace(/[^0-9]/g, '')); 
+            const ownerNumbers = [...global.config.ownerlid.map(v => v.replace(/[^0-9]/g, '')), ...global.config.owner.map(v => v.replace(/[^0-9]/g, ''))]; 
+            
             const mappedOwners = ownerNumbers.map(v => v + detectwhat); 
             console.log('DEBUG: mappedOwners (JID format for comparison):', mappedOwners);
             const isROwner = mappedOwners.includes(m.sender);
