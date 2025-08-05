@@ -14,7 +14,8 @@ global.setting = {
 }
 
 global.config = {
-    owner: ["6283136099660", "242588711973065@lid"],
+    owner: ["6283136099660"],
+    ownerlid: ["242588711973065@lid"],
     name: "Kashiwada-san",
     ownername: 'Dxyz',
     menu: { thumbnailUrl: 'https://files.cloudkuimages.guru/images/0vJcLfEA.jpg' }, //thumbnail: fs.readFileSync('./image/tambahkan-ft-trus-kasih-nama')
