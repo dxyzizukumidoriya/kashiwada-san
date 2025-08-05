@@ -143,6 +143,7 @@ module.exports = {
             if (opts['swonly'] && m.chat !== 'status@broadcast') return
             if (typeof m.text !== 'string') m.text = ''
 
+            const msg = m;
             let usedPrefix
             let _user = global.db.data && global.db.data.users && global.db.data.users[m.sender]
             
@@ -291,6 +292,7 @@ module.exports = {
                     if (typeof plugins.before === 'function')
                         if (await plugins.before.call(this, m, {
                                 match,
+                                msg,
                                 conn: this,
                                 ctx,
                                 sock,
@@ -394,6 +396,7 @@ module.exports = {
                         }
                         let extra = {
                             match,
+                            msg,
                             usedPrefix,
                             noPrefix,
                             _args,
