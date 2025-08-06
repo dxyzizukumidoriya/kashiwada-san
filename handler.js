@@ -631,15 +631,15 @@ ${desc}
 
 global.dfail = (type, m, conn) => {
     let msg = {
-        rowner: `*( ${global.msg.danied} )* Perintah ini hanya dapat digunakan oleh *Real Owner*!`,
-        owner: `*( ${global.msg.danied} )* Perintah ini hanya dapat digunakan oleh *Owner*!`,
-        banned: `*( ${global.msg.danied} )* Perintah ini hanya untuk pengguna yang terbanned..`,
-        premium: `*( ${global.msg.danied} )* Perintah ini hanya dapat digunakan oleh *Premium*!`,
-        group: `*( ${global.msg.danied} )* Perintah ini hanya dapat digunakan di grup!`,
-        private: `*( ${global.msg.danied} )* Perintah ini hanya dapat digunakan di Chat Pribadi!`,
-        admin: `*( ${global.msg.danied} )* Perintah ini hanya untuk *Admin* grup!`,
-        botAdmin: `*( ${global.msg.danied} )* Jadikan bot sebagai *Admin* untuk menggunakan perintah ini!`,
-        restrict: `*( ${global.msg.danied} )* Fitur ini di *disable*!`,
+        rowner: `*( Ditolak )* Perintah ini hanya dapat digunakan oleh *Real Owner*!`,
+        owner: `*( Ditolak )* Perintah ini hanya dapat digunakan oleh *Owner*!`,
+        banned: `*( Ditolak )* Perintah ini hanya untuk pengguna yang terbanned..`,
+        premium: `*( Ditolak )* Perintah ini hanya dapat digunakan oleh *Premium*!`,
+        group: `*( Ditolak )* Perintah ini hanya dapat digunakan di grup!`,
+        private: `*( Ditolak )* Perintah ini hanya dapat digunakan di Chat Pribadi!`,
+        admin: `*( Ditolak )* Perintah ini hanya untuk *Admin* grup!`,
+        botAdmin: `*( Ditolak )* Jadikan bot sebagai *Admin* untuk menggunakan perintah ini!`,
+        restrict: `*( Ditolak )* Fitur ini di *disable*!`,
         unreg: `*( Hai *@${m.sender.split("@")[0]} )* Anda belum terdaftar!\n\nContoh: *#daftar Manusia.16* atau *#regmail xxx@gmail.com*`
     } [type]
     if (msg) return m.reply(msg)
