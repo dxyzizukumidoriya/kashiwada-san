@@ -3,7 +3,16 @@
 // ⚡ Plugin: ytdl-downloader.mjs
 
 import axios from 'axios';
+import fs from 'fs/promises';
+import path from 'path';
+import {
+    fileURLToPath
+} from 'url';
+import ffmpeg from 'fluent-ffmpeg';
+import ffmpegPath from 'ffmpeg-static';
 import Jimp from 'jimp'
+
+ffmpeg.setFfmpegPath(ffmpegPath);
 
 let izuku = async (m, {
     conn,
@@ -155,7 +164,9 @@ let izuku = async (m, {
                 let buff = await axios.get(ytDx.download, {
                     responseType: 'arraybuffer'
                 });
-                const videoRes = Buffer.from(buff.data, 'binary')
+
+                const con = await fixVideoBuffer(buff.data);
+                const videoRes = Buffer.from(con, 'binary')
 
                 if (videoRes.length > 40 * 1024 * 1024) {
                     await conn.sendClearTime(
@@ -207,5 +218,33 @@ izuku.limit = true;
 izuku.command = /^(ytmp3|yta|ytaudio|ytmp4|ytv|ytvideo)$/i;
 izuku.help = ['ytmp3', 'yta', 'ytaudio', 'ytmp4', 'ytv', 'ytvideo'];
 izuku.tags = ['downloader']
+
+async function fixVideoBuffer(buffer) {
+    const tmpDir = path.join(process.cwd(), 'tmp');
+    await fs.mkdir(tmpDir, {
+        recursive: true
+    });
+
+    const input = path.join(tmpDir, 'input.mp4');
+    const output = path.join(tmpDir, 'output.mp4');
+
+    await fs.writeFile(input, buffer);
+
+    return new Promise((resolve, reject) => {
+        ffmpeg(input)
+            .outputOptions([
+                '-movflags +faststart',
+                '-c copy'
+            ])
+            .on('end', async () => {
+                const fixedBuffer = await fs.readFile(output);
+                await fs.unlink(input);
+                await fs.unlink(output);
+                resolve(fixedBuffer);
+            })
+            .on('error', reject)
+            .save(output);
+    });
+}
 
 export default izuku;
