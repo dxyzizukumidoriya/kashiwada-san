@@ -24,8 +24,8 @@ global.config = {
       //thumbnail: fs.readFileSync('./image/tambahkan-ft-trus-kasih-nama')
     },
     wagc: [ "https://chat.whatsapp.com/JyeT1hdCPJeLy95tzx5eyI", "https://chat.whatsapp.com/DfffgArbTUu46nqCgmCbE0" ],
-    apikey: 'https://izumi-apis.aetherrr.biz.id',
-    web: 'https://izumi-apis.aetherrr.biz.id/',
+    apikey: 'https://izumiiiiiiii.dpdns.org',
+    web: 'https://izumiiiiiiii.dpdns.org/',
     saluran: '120363401113812327@newsletter', 
     jid: '120363267102694949@g.us', 
     wach: 'https://whatsapp.com/channel/0029VadFS3r89inc7Jjus03W', 
