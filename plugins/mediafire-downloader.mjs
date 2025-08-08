@@ -2,45 +2,55 @@
 // 👿 Creator: Dxyz
 // ⚡ Plugin: mediafire-downloader.mjs
 
-import fetch from 'node-fetch';
-
-let izuku = async (m, {
+let izumi = async (m, {
     conn,
-    args
+    text
 }) => {
-    if (!/www.mediafire.com/.test(args[0])) throw ' *[ ! ]* Maaf Anda Masukan Link MediaFire Nya Dulu !';
+    if (!text.includes('mediafire')) throw '> ⚠️ Masukan Link MediaFire Nya Yah...'
     try {
-        const response = await (await fetch(`https://izumi-apis.zone.id/downloader/mfdl?url=${args[0]}`)).json();
-        let {
-            downloadLink,
-            metadata
-        } = response.result;
+        const mf = await (await fetch(`${config.apikey}/downloader/mediafire?url=${encodeURIComponent(text)}`)).json()
 
-        if (!downloadLink && !metadata) return m.reply(' *[ ! ]* Maaf Metadata/Download Gagal Di Get !')
+        let mfc = `> - - - - - [ MediaFire Downloader ] - - - - - -
+> 📂Filename: ${mf.result.filename || ''}
+> 🗄️Size: ${mf.result.filesize || ''}
+> 🧩Mimetype: ${mf.result.mimetype || ''}
+> 🔗Download: ${mf.result.download_url || ''}
+> - - - - - - - - - - - - - - - - - - - - - - - - - - `
+        await m.reply(mfc);
 
-        let mfcp = ` *π* [ Downloader MediaFire ] *π*
-> 📁 *FileName:* *${metadata.fileName || ''}*
-> 🗄️ *FileSize:* *${metadata.fileSize || ''}*
-> ⬆️ *uploadDate:* *${metadata.uploadedDate || ''}*`;
-        await conn.reply(m.chat, mfcp, m);
+        let sizeMB = 0;
+        if (mf.result.filesize) {
+            const sizeStr = mf.result.filesize.toLowerCase().replace(/ /g, '')
+            if (sizeStr.includes('gb')) {
+                sizeMB = parseFloat(sizeStr) * 1024
+            } else if (sizeStr.includes('mb')) {
+                sizeMB = parseFloat(sizeStr)
+            } else if (sizeStr.includes('kb')) {
+                sizeMB = parseFloat(sizeStr) / 1024
+            }
+        };
 
-        conn.sendMessage(m.chat, {
+        if (sizeMB > 90) {
+            return m.reply(`❌ Ukuran file terlalu besar (${sizeMB.toFixed(2)} MB). Batas maksimal 90 MB.`)
+        };
+
+        await conn.sendMessage(m.chat, {
             document: {
-                url: downloadLink
+                url: mf.result.download_url
             },
-            mimetype: metadata.mimeType,
-            fileName: metadata.fileName,
-            caption: mfcp
+            fileName: mf.result.filename,
+            mimetype: mf.result.mimetype
+        }, {
+            quoted: m
         });
-
     } catch (e) {
-        m.reply(' *[ ! ]* Maaf Error Mungkin Lu Kebanyakan Request');
-        console.error('Error', e);
-    };
-};
+        await m.reply('> ❌ Maaf Error Mungkin Lu Kebanyakan Request')
+        console.error('Error', e)
+    }
+}
 
-izuku.help = ['mf', 'mfdl', 'mediafire'];
-izuku.command = /^(mf|mfdl|mediafire)$/i;
-izuku.tags = ['downloader'];
+izumi.help = ['mf', 'mediafire', 'mfdl'];
+izumi.command = ['mf', 'mediafire', 'mfdl'];
+izumi.tags = ['downloader']
 
-export default izuku;
+export default izumi;
