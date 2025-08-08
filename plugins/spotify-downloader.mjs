@@ -20,7 +20,7 @@ let handler = async (m, {
     return new Promise(async (revolse) => {
         if (/open\.spotify\.com/.test(text)) {
             if (!/open\.spotify\.com/.test(text)) return m.reply("⚠️ Link bukan dari Spotify!");
-            await axios.get(`${config.apikey}/downloader/spotifydl?url=${text}`).then(async (a) => {
+            await axios.get(`${config.apikey}/downloader/spotify?url=${text}`).then(async (a) => {
                 const x = a.data.result
                 const caption = `
 ╭───────────────────────────────╮
@@ -60,19 +60,8 @@ let handler = async (m, {
                 console.log('msg:', err);
             });
         } else {
-            await axios.get(`${config.apikey}/search/spotifysrc?q=${text}`).then(async (a) => {
+            await axios.get(`${config.apikey}/search/spotify?q=${text}`).then(async (a) => {
                 const x = a.data.result
-                const listMessage = {
-                    title: 'Pilih Lagu',
-                    sections: [{
-                        title: 'Search Spotify',
-                        rows: x.map((a, i) => ({
-                            title: `[ ${i + 1} ]. ${a.title}`,
-                            description: `${a.duration} / ${a.artist}`,
-                            id: `${usedPrefix + command} ${a.url}`
-                        }))
-                    }]
-                };
 
                 const messageText = `
 ╭────────────────────────────╮
@@ -90,24 +79,12 @@ Balas dengan nomor (1-${x.length}).`;
                         key: m.key
                     }
                 })
-                await conn.sendMessage(m.chat, {
-                    text: messageText,
-                    buttons: [{
-                        buttonId: 'action',
-                        buttonText: {
-                            displayText: 'ini pesan interactiveMeta'
-                        },
-                        type: 4,
-                        nativeFlowInfo: {
-                            name: "single_select",
-                            paramsJson: JSON.stringify(listMessage),
-                        },
-                    }],
-                    headerType: 1,
-                    viewOnce: true
-                }, {
-                    quoted: m
-                });
+                await conn.sendAliasMessage(m.chat, {
+                    text: messageText
+                }, x.map((a, i) => ({
+                    alias: `${i + 1}`,
+                    response: `${usedPrefix + command} ${a.url || ''}`
+                })), m);
             }).catch((err) => {
                 m.reply(' *[ ! ]* Maaf Error Mungkin Lu Kebanyakan Request');
                 console.log('msg:', err);
