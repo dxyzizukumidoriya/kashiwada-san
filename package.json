@@ -34,7 +34,7 @@
   },
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "@adiwajshing/baileys": "github:kiuur/bails",
+    "@adiwajshing/baileys": "npm:@shennmine/baileys",
     "@adiwajshing/keyed-db": "^0.2.4",
     "@google/genai": "^1.9.0",
     "@google/generative-ai": "^0.24.1",
