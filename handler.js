@@ -149,7 +149,6 @@ module.exports = {
             
             const detectwhat = m.sender.includes('@lid') ? '@lid' : '@s.whatsapp.net';
             const ownerNumbers = [...global.config.ownerlid.map(v => v.replace(/[^0-9]/g, '')), ...global.config.owner.map(v => v.replace(/[^0-9]/g, ''))]; 
-            
             const mappedOwners = ownerNumbers.map(v => v + detectwhat); 
             console.log('DEBUG: mappedOwners (JID format for comparison):', mappedOwners);
             const isROwner = mappedOwners.includes(m.sender);
@@ -292,8 +291,8 @@ module.exports = {
                 try {
                     if (typeof plugins.before === 'function')
                         if (await plugins.before.call(this, m, {
-                                match,
                                 msg,
+                                match,
                                 conn: this,
                                 ctx,
                                 sock,
@@ -316,7 +315,7 @@ module.exports = {
                         let noPrefix = m.text.replace(usedPrefix, '')
                         let [command, ...args] = noPrefix.trim().split` `.filter(v => v)
                         if (!m.isGroup && db.data.settings[this.user.jid].onlygrup) {
-                           if (usedPrefix && command) return m.reply(`Sorry Bre Ini Only Gc Link Gc:\n\n${config.wagc.map((a, i) => `${i + 1 + ','} ${a}`).join(`\n`)}`)
+                           if (usedPrefix && command) return
                         };
                         args = args || []
                         let _args = noPrefix.trim().split` `.slice(1)
@@ -347,7 +346,7 @@ module.exports = {
                             continue
                         }
                         if (plugins.loading) { // Both Owner
-                            m.reply(`*( Loading )* Tunggu Sebentar...`)
+                            await conn.sendMessage(m.chat, { react: { text: '🕑', key: m.key } }) 
                         }
                         if (plugins.rowner && !(isROwner || isOwner)) { // Real Owner
                             fail('rowner', m, this)
@@ -396,8 +395,8 @@ module.exports = {
                             continue // If the level has not been reached
                         }
                         let extra = {
-                            match,
                             msg,
+                            match,
                             usedPrefix,
                             noPrefix,
                             _args,
