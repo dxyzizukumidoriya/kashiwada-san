@@ -3,6 +3,7 @@
 // ⚡ Plugin: play-downloader.mjs
 
 import axios from 'axios';
+import fs from 'fs';
 import yts from 'yt-search';
 
 let handler = async (m, {
@@ -45,9 +46,6 @@ let handler = async (m, {
 │ 🎧 Audio: 2
 ╰───────────────────────`;
 
-            const buf = await axios.get('https://files.catbox.moe/bd40za.jpg', {
-                responseType: 'arraybuffer'
-            });
             await conn.sendAliasMessage(
                 m.chat, {
                     document: {
@@ -57,7 +55,7 @@ let handler = async (m, {
                     fileName: result.title,
                     fileLength: 10,
                     pageCount: 10,
-                    jpegThumbnail: buf.data,
+                    jpegThumbnail: fs.readFileSync('./lib/thumbnail.jpg'),
                     caption: youtubeInfo,
                     ...thumb
                 }, [{
