@@ -3,7 +3,7 @@
 // ⚡ Plugin: ytdl-downloader.mjs
 
 import axios from 'axios';
-import fs from 'fs/promises';
+import fs from 'fs';
 import path from 'path';
 import {
     fileURLToPath
@@ -42,10 +42,6 @@ let izuku = async (m, {
 │
 ╰───────────────────────`
 
-                const buf = await axios.get('https://files.catbox.moe/bd40za.jpg', {
-                    responseType: 'arraybuffer'
-                });
-
                 await conn.sendClearTime(
                     m.chat, {
                         document: {
@@ -55,7 +51,7 @@ let izuku = async (m, {
                         fileName: result.title,
                         fileLength: 10,
                         pageCount: 10,
-                        jpegThumbnail: buf.data,
+                        jpegThumbnail: fs.readFileSync('./lib/thumbnail.jpg'),
                         caption: youtubeInfo,
                         ...thumb
                     }, {
@@ -134,10 +130,6 @@ let izuku = async (m, {
 │
 ╰───────────────────────`;
 
-                const buf = await axios.get('https://files.catbox.moe/bd40za.jpg', {
-                    responseType: 'arraybuffer'
-                });
-
                 await conn.sendClearTime(
                     m.chat, {
                         document: {
@@ -147,7 +139,7 @@ let izuku = async (m, {
                         fileName: result.title,
                         fileLength: 10,
                         pageCount: 10,
-                        jpegThumbnail: buf.data,
+                        jpegThumbnail: fs.readFileSync('./lib/thumbnail.jpg'),
                         caption: youtubeInfo,
                         ...thumb
                     }, {
@@ -221,14 +213,14 @@ izuku.tags = ['downloader']
 
 async function fixVideoBuffer(buffer) {
     const tmpDir = path.join(process.cwd(), 'tmp');
-    await fs.mkdir(tmpDir, {
+    await fs.promises.mkdir(tmpDir, {
         recursive: true
     });
 
     const input = path.join(tmpDir, 'input.mp4');
     const output = path.join(tmpDir, 'output.mp4');
 
-    await fs.writeFile(input, buffer);
+    await fs.promises.writeFile(input, buffer);
 
     return new Promise((resolve, reject) => {
         ffmpeg(input)
@@ -237,9 +229,9 @@ async function fixVideoBuffer(buffer) {
                 '-c copy'
             ])
             .on('end', async () => {
-                const fixedBuffer = await fs.readFile(output);
-                await fs.unlink(input);
-                await fs.unlink(output);
+                const fixedBuffer = await fs.promises.readFile(output);
+                await fs.promises.unlink(input);
+                await fs.promises.unlink(output);
                 resolve(fixedBuffer);
             })
             .on('error', reject)
