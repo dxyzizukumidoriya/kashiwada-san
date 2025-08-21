@@ -18,7 +18,7 @@ global.config = {
     ownerlid: ["242588711973065@lid"],
     name: "Kashiwada-san",
     ownername: 'Dxyz',
-    menu: { thumbnailUrl: 'https://files.cloudkuimages.guru/images/0vJcLfEA.jpg' }, //thumbnail: fs.readFileSync('./image/tambahkan-ft-trus-kasih-nama')
+    menu: { thumbnailUrl: 'https://files.cloudkuimages.guru/images/v1UQW3VA.jpg' }, //thumbnail: fs.readFileSync('./image/tambahkan-ft-trus-kasih-nama')
     thumbnail: {
       thumbnailUrl: geturl
       //thumbnail: fs.readFileSync('./image/tambahkan-ft-trus-kasih-nama')
