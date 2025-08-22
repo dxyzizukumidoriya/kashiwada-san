@@ -12,7 +12,7 @@ let izumi = async (m, {
     let input = text ? text : ''
     conn.sendMessage(m.chat, {
         text: input,
-        mentions: tag.map(a => a.jid)
+        mentions: tag.map(a => a.jid || a.id)
     }, {
         quoted: m
     })
